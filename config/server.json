@@ -1,0 +1,14 @@
+ {
+    "dev": {
+        "host": "localhost",
+        "port": 3000
+    },
+    "qa": {
+        "host": "localhost",
+        "port": 80
+    },
+    "prod": {
+        "host": "xserver",
+        "port": 8082
+    }
+}
