@@ -7,7 +7,7 @@ const my_module = {
             path: '/test',
             config: { auth: false },
             handler: function (request, reply) {
-                reply("testing successful")
+                reply("testing at: "+request.info.host || request.connection.info.host + ':' + request.connection.info.port);
 
             }
         })

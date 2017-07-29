@@ -19,7 +19,7 @@ const userModule = {
                         resp.setContent(data);
                         reply(resp.getJSON()).code(200)
                     }).catch(function (err) {
-                        resp.setError("falla en el servicio")
+                         resp.setError();
                         console.log(err)
                         reply(resp.getJSON()).code(500)
                     })
@@ -42,7 +42,7 @@ const userModule = {
                             resp.setContent(data2);
                             reply(resp.getJSON()).code(200)
                         }).catch(function (err) {
-                            resp.setError("falla en el servicio")
+                            resp.setError();
                             console.log(err)
                             reply(resp.getJSON()).code(500)
                         })
@@ -81,7 +81,7 @@ const userModule = {
                         }
 
                     }).catch(function (err) {
-                        resp.setError("falla en el servicio")
+                        resp.setError();
                         console.log(err)
                         reply(resp.getJSON()).code(500)
                     })

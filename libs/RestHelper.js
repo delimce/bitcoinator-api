@@ -1,6 +1,8 @@
 'use strict';
 
 var resp = {}
+var defaultErrorMessage = "error, service has failed";
+let _ = require("underscore");
 
 
 /**
@@ -20,7 +22,7 @@ exports.setContent = function (result) {
 exports.setError = function (errorMessage) {
 
     resp = { "success": false }
-    resp.message = errorMessage;
+    resp.message = _.isUndefined(errorMessage)?defaultErrorMessage:errorMessage;
 
 }
 
