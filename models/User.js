@@ -25,13 +25,17 @@ const User = db.define('User', {
             type: Sequelize.STRING,
             allowNull: false,
             validate: {}
+        },
+        password: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            validate: {}
         }
     },
 
     {
         tableName: 'tbl_user',
         freezeTableName: true,
-        timestamps:false,
         underscored: true,
     }
 )
