@@ -1,0 +1,30 @@
+{
+  "name": "bitcoinator-api",
+  "version": "0.0.1",
+  "private": true,
+  "description": "api for bitcoinator network",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/delimce/bitcoinator-api.git"
+  },
+  "keywords": [
+    "bitcoin",
+    "bitcoinator"
+  ],
+  "author": "delimce",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/delimce/bitcoinator-api/issues"
+  },
+  "homepage": "https://github.com/delimce/bitcoinator-api#readme",
+  "dependencies": {
+    "hapi": "^16.5.0",
+    "mysql2": "^1.3.6",
+    "sequelize": "^4.4.2",
+    "underscore": "^1.8.3"
+  }
+}
