@@ -3,6 +3,7 @@ let conf = require("./config.json");
 let models = require("../../models");
 let resp = require("../../libs/RestHelper")
 let bcrypt = require('bcrypt');
+let _ = require("underscore");
 
 const userModule = {
     register: function (server, options, next) {
@@ -32,25 +33,61 @@ const userModule = {
                 handler: function (request, reply) {
 
                     var data = request.payload   // <-- this is the important line
-                    bcrypt.hash(data.password, 10).then(function (hash) {
-                        // Store hash in your password DB.
-                        // you can also build, save and access the object with chaining:
-                        models.User
-                            .build({ name: data.name, lastname: data.lastname, email: data.email, password: hash })
-                            .save()
-                            .then(function (data2) {
-                                // success
-                                resp.setContent(data2);
-                                reply(resp.getJSON()).code(200)
-                            }).catch(function (err) {
-                                resp.setError("falla en el servicio")
-                                console.log(err)
-                                reply(resp.getJSON()).code(500)
-                            })
-                    });
-
+                    // Store hash in your password DB.
+                    // you can also build, save and access the object with chaining:
+                    models.User
+                        .build({ name: data.name, lastname: data.lastname, email: data.email, password: bcrypt.hashSync(data.password, 10) })
+                        .save().then(function (data2) {
+                            // success
+                            resp.setContent(data2);
+                            reply(resp.getJSON()).code(200)
+                        }).catch(function (err) {
+                            resp.setError("falla en el servicio")
+                            console.log(err)
+                            reply(resp.getJSON()).code(500)
+                        })
 
                 }
+            },
+            {
+                method: 'POST',
+                path: conf.basePath + "/login",
+                config: { auth: conf.auth },
+                handler: function (request, reply) {
+
+                    var data = request.payload   // <-- this is the important line
+                    models.User.findOne({
+                        attributes: ['id', 'email', 'password'],
+                        where: { email: data.email }
+                    }).then(function (result) {
+                        // success
+                        if (_.size(result) > 0) {
+
+                            if (bcrypt.compareSync(data.password, result.dataValues.password)) {
+                                // Passwords match
+                                resp.setContent("yeah");
+                                reply(resp.getJSON()).code(200)
+                            } else {
+                                // Passwords don't match
+                                console.log("no logged")
+                                resp.setError("no logged")
+                                reply(resp.getJSON()).code(200)
+                            }
+
+
+                        } else {
+                            resp.setError("not logged");
+                            reply(resp.getJSON()).code(200)
+                        }
+
+                    }).catch(function (err) {
+                        resp.setError("falla en el servicio")
+                        console.log(err)
+                        reply(resp.getJSON()).code(500)
+                    })
+
+                }
+
             }
         ])
 
