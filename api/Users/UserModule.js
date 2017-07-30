@@ -107,7 +107,8 @@ const userModule = {
                 config: { auth: 'jwt' },
                 handler: function (request, reply) {
 
-                    reply("fine");
+                    var credentials = request.auth.credentials; ///jwt payload
+                    reply(credentials);
 
                 }
             }
