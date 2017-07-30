@@ -3,6 +3,7 @@
 ///legacy plugins
 const legacy = [];
 legacy.push(require("inert"))
+legacy.push(require("hapi-auth-jwt2"))
 
 
 
@@ -10,6 +11,7 @@ legacy.push(require("inert"))
 const myModules = []
 myModules.push(require("./api/my_module"))
 myModules.push(require("./filters/custom"))
+myModules.push(require("./filters/jwt_bundle"))
 ///api's
 myModules.push(require("./api/Users/UserModule"))
 

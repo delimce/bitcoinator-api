@@ -19,7 +19,7 @@ const userModule = {
                         resp.setContent(data);
                         reply(resp.getJSON()).code(200)
                     }).catch(function (err) {
-                         resp.setError();
+                        resp.setError();
                         console.log(err)
                         reply(resp.getJSON()).code(500)
                     })
@@ -40,7 +40,7 @@ const userModule = {
                         .save().then(function (data2) {
                             // success
                             resp.setContent(data2);
-                            reply(resp.getJSON()).code(200)
+                            reply(resp.getJSON()).code(201)
                         }).catch(function (err) {
                             resp.setError();
                             console.log(err)
@@ -57,7 +57,7 @@ const userModule = {
 
                     var data = request.payload   // <-- this is the important line
                     models.User.findOne({
-                        attributes: ['id', 'email', 'password'],
+                        attributes: ['id', 'email', 'name', 'password'],
                         where: { email: data.email }
                     }).then(function (result) {
                         // success
@@ -65,7 +65,18 @@ const userModule = {
 
                             if (bcrypt.compareSync(data.password, result.dataValues.password)) {
                                 // Passwords match
-                                resp.setContent("yeah");
+
+                                let secret = require("../../config/jwt.json").secret; ///secret key for jwt
+                                let jwt = require("jsonwebtoken");
+                                var obj = {}; // object/info you want to sign
+                                obj.userId = result.dataValues.id;
+                                obj.userName = result.dataValues.name;
+                                obj.userEmail = result.dataValues.email;
+
+                                var token = jwt.sign(obj, secret); //generating a new JWT
+                                obj.token = token;
+
+                                resp.setContent(obj);
                                 reply(resp.getJSON()).code(200)
                             } else {
                                 // Passwords don't match
@@ -88,6 +99,17 @@ const userModule = {
 
                 }
 
+            },
+
+            {
+                method: 'GET',
+                path: conf.basePath + "/info",
+                config: { auth: 'jwt' },
+                handler: function (request, reply) {
+
+                    reply("fine");
+
+                }
             }
         ])
 
