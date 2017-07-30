@@ -1,3 +1,5 @@
+
+let settings = require("../config/settings.json");
 const jwt_bundle = {
     register: function (server, options, next) {
         // add functionality -> we’ll do that in the section below
@@ -5,6 +7,13 @@ const jwt_bundle = {
 
         // bring your own validation function
         var validate = function (decoded, request, callback) {
+
+
+
+            var moment = require('moment-timezone');
+           let timeu =  moment.tz(new Date,settings.timezone);
+
+           console.log(timeu)
 
             // do your checks to see if the person is valid
 
@@ -27,7 +36,7 @@ const jwt_bundle = {
             {
                 key: token.secret,          // Never Share your secret key
                 validateFunc: validate,            // validate function defined above
-                verifyOptions: {algorithms: ['HS256']} // pick a strong algorithm
+                verifyOptions: { algorithms: ['HS256'] } // pick a strong algorithm
             });
 
         server.auth.default('jwt');
