@@ -4,6 +4,7 @@ let models = require("../../models");
 let resp = require("../../libs/RestHelper")
 let bcrypt = require('bcrypt');
 let _ = require("underscore");
+let locale = require("../../libs/i18nHelper");
 
 const userModule = {
     register: function (server, options, next) {
@@ -81,13 +82,13 @@ const userModule = {
                             } else {
                                 // Passwords don't match
                                 console.log("no logged")
-                                resp.setError("no logged")
+                                resp.setError(locale.getString("notLogged"))
                                 reply(resp.getJSON()).code(200)
                             }
 
 
                         } else {
-                            resp.setError("not logged");
+                            resp.setError(locale.getString("notLogged"))
                             reply(resp.getJSON()).code(200)
                         }
 

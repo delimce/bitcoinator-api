@@ -7,6 +7,9 @@ const my_module = {
             path: '/test',
             config: { auth: false },
             handler: function (request, reply) {
+                let locale = require("../libs/i18nHelper");
+                console.log(locale.getString("Welcome"));
+          
                 reply("testing at: "+request.info.host || request.connection.info.host + ':' + request.connection.info.port);
 
             }

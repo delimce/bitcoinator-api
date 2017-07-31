@@ -1,5 +1,5 @@
 {
-"timezone":"America/Caracas",
-"language":"esp"
-
+    "timezone": "America/Caracas",
+    "lang": "es",
+    "langFile": "../../i18n/locale.json"
 }
