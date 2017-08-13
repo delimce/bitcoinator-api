@@ -11,6 +11,7 @@
 # ocamlbuild working directory
 _build/
 node_modules/
+.idea/
 
 # ocamlbuild targets
 *.byte

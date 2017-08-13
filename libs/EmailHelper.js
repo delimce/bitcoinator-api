@@ -1,36 +1,50 @@
 'use strict';
 
+var mail = require('nodemailer');
+let mailConfig = require("../config/email.json");
+
+let transporter = mail.createTransport(mailConfig.smtp);
+
+let message = {
+    from: mailConfig.defaultFromEmail,
+    to: '', // comma separated list
+    subject: '',
+    text: '',
+    html: ''
+};
+
+
+exports.setFrom = function (value) {
+    message.from = value
+}
+
+exports.setTo = function (value) {
+    message.to = value
+}
+
+exports.setSubject = function (value) {
+    message.subject = value
+}
+
+exports.setContentText = function (value) {
+    message.text = value
+}
+
+exports.setContentHtml = function (value) {
+    message.html = value
+}
 
 exports.send = function () {
-
-    var mail = require('nodemailer');
-    let mailConfig = require("../config/email.json");
-
-    let transporter = mail.createTransport(mailConfig.Mailgun);
-
-    let message = {
-        from: 'YourServer ',
-        to: 'delimce@gmail.com', // comma separated list
-        subject: 'Subject Line',
-        text: 'Text contents.',
-        html: '<b>Text contents.</b>'
-    };
-
 
     transporter.sendMail(message, function (error, info) {
         if (error) {
             console.log(error);
         } else {
-            console.log('Sent: ' + info.response);
+            console.log('Email Sent: ' + info.response);
         }
     });
 
 }
 
-
-exports.hola  = function(){
-
-    console.log("hola")
-}
 
 

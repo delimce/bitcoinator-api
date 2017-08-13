@@ -109,6 +109,10 @@ const userModule = {
                 config: { auth: 'jwt' },
                 handler: function (request, reply) {
 
+                    email.setTo("ldelima@grupo-un.com,delimce@gmail.com");
+                    email.setSubject("probando")
+                    email.setContentText("esto es una prueba")
+
 
                     email.send();
 
