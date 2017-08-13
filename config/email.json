@@ -1,0 +1,12 @@
+{
+    "Mailgun": {
+        "service": "Mailgun",
+        "auth": {
+            "user": "postmaster@sandbox7c024d3c553b4d109a44b93a69ea05cc.mailgun.org",
+            "pass": "3588292481be5968469b7d2338dda9c4"
+        }
+    },
+    "smtp":{},
+    "defaultFromName": "user",
+    "defaultFromEmail": "you@domain.com"
+}

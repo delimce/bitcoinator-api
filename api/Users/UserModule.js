@@ -5,6 +5,7 @@ let resp = require("../../libs/RestHelper")
 let bcrypt = require('bcrypt');
 let _ = require("underscore");
 let locale = require("../../libs/i18nHelper");
+let email = require("../../libs/EmailHelper");
 
 const userModule = {
     register: function (server, options, next) {
@@ -107,6 +108,9 @@ const userModule = {
                 path: conf.basePath + "/info",
                 config: { auth: 'jwt' },
                 handler: function (request, reply) {
+
+
+                    email.send();
 
                     var credentials = request.auth.credentials; ///jwt payload
                     reply(credentials);
