@@ -7,8 +7,13 @@ var _ = require("underscore");
 // Create a server with a host and port
 const server = new Hapi.Server();
 
+
 ////connect server 1
 var server1 = server.connection(myServer.dev);
+
+//for CORS
+var corsHeaders = require('hapi-cors-headers');
+server1.ext('onPreResponse', corsHeaders);
 
 
 //register modules
