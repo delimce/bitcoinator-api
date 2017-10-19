@@ -6,7 +6,7 @@
             "pass": "3588292481be5968469b7d2338dda9c4"
         }
     },
-    "smtp":{
+    "smtp": {
         "pool": "true",
         "host": "cappucino.websitewelcome.com",
         "port": 465,
@@ -14,7 +14,11 @@
         "auth": {
             "user": "luis@delimce.com",
             "pass": "masterdelimce00."
+        },
+        "tls": {
+            "rejectUnauthorized": "false"
         }
     },
+    "sendgrid":"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",
     "defaultFromEmail": "Luis D'lima <luis@delimce.com>"
 }

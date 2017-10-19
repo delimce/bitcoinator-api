@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/delimce/bitcoinator-api#readme",
   "dependencies": {
+    "@sendgrid/mail": "^6.1.4",
     "bcrypt": "^1.0.2",
     "hapi": "^16.5.0",
     "hapi-auth-jwt2": "^7.3.0",

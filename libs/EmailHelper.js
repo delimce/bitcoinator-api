@@ -1,6 +1,9 @@
 'use strict';
 
 var mail = require('nodemailer');
+
+const sgMail = require('@sendgrid/mail'); ///sendGrid
+
 let mailConfig = require("../config/email.json");
 
 let transporter = mail.createTransport(mailConfig.smtp);
@@ -45,6 +48,15 @@ exports.send = function () {
     });
 
 }
+
+
+exports.SGsend = function () {
+    
+    sgMail.setApiKey(mailConfig.sendgrid);
+
+    sgMail.send(message);
+    
+    }
 
 
 

@@ -4,5 +4,8 @@
     },
     "notLogged": {
         "es": "credenciales no válidas"
+    },
+    "notFound": {
+        "es": "registro no encontrado"
     }
 }

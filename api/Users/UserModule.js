@@ -109,18 +109,51 @@ const userModule = {
                 config: { auth: 'jwt' },
                 handler: function (request, reply) {
 
-                    email.setTo("ldelima@grupo-un.com,delimce@gmail.com");
-                    email.setSubject("probando")
-                    email.setContentText("esto es una prueba")
+                    email.setTo("delimce@gmail.com");
+                    email.setSubject("probando");
+                    email.setContentHtml("algo");
+                    email.setContentText("algo");
 
-
-                    email.send();
+                    email.SGsend();
 
                     var credentials = request.auth.credentials; ///jwt payload
                     reply(credentials);
 
                 }
+            },
+
+            {
+                method: 'PUT',
+                path: conf.basePath + "/resetPassword",
+                config: { auth: false },
+                handler: function (request, reply) {
+
+                    var data = request.payload   // <-- this is the important line
+
+                    models.User.findOne({
+                        attributes: ['id', 'email', 'name', 'lastname'],
+                        where: { email: data.email }
+                    }).then(function (result) {
+                        // success
+                        if (_.size(result) > 0) { /// user found
+
+                            resp.setContent(result.dataValues);
+                            reply(resp.getJSON()).code(200);
+
+                        } else {
+                            resp.setError(locale.getString("notFound"))
+                            reply(resp.getJSON()).code(200)
+                        }
+
+                    }).catch(function (err) {
+                        resp.setError();
+                        console.log(err)
+                        reply(resp.getJSON()).code(500)
+                    })
+
+                }
             }
+
         ])
 
         // call next() to signal hapi that your plugin has done the job
