@@ -19,6 +19,6 @@
             "rejectUnauthorized": "false"
         }
     },
-    "sendgrid":"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",
+    "sendgrid":"",
     "defaultFromEmail": "Luis D'lima <luis@delimce.com>"
 }
