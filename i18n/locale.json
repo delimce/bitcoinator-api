@@ -5,6 +5,9 @@
     "notLogged": {
         "es": "credenciales no válidas"
     },
+    "inactive": {
+        "es": "SU usuario está ináctivo"
+    },
     "notFound": {
         "es": "registro no encontrado"
     }

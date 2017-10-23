@@ -1,7 +1,8 @@
 'use strict'
-let conf = require("./config.json");
-let models = require("../../models");
-let resp = require("../../libs/RestHelper")
+const conf = require("./config.json");
+const models = require("../../models");
+let resp = require("../../libs/RestHelper");
+const Joi = require('joi');
 let bcrypt = require('bcrypt');
 let _ = require("underscore");
 let locale = require("../../libs/i18nHelper");
@@ -31,7 +32,17 @@ const userModule = {
             {
                 method: 'POST',
                 path: conf.basePath + "/new",
-                config: { auth: conf.auth },
+                config: {
+                    auth: conf.auth,
+                    validate: {
+                        payload: {
+                            name: Joi.string().regex(/^[a-zA-Z '.-]*$/).required(),
+                            lastname: Joi.string().regex(/^[a-zA-Z '.-]*$/).required(),
+                            email: Joi.string().email().required(),
+                            password: Joi.string().min(3).max(200).required()
+                        }
+                    }
+                },
                 handler: function (request, reply) {
 
                     var data = request.payload   // <-- this is the important line
@@ -54,12 +65,21 @@ const userModule = {
             {
                 method: 'POST',
                 path: conf.basePath + "/login",
-                config: { auth: conf.auth },
+                config: {
+                    auth: conf.auth,
+                    validate: {
+                        payload: {
+                            email: Joi.string().email().required(),
+                            password: Joi.string().min(3).max(200).required()
+                        }
+                    }
+
+                },
                 handler: function (request, reply) {
 
                     var data = request.payload   // <-- this is the important line
                     models.User.findOne({
-                        attributes: ['id', 'email', 'name', 'password'],
+                        attributes: ['id', 'email', 'name', 'password', 'status'],
                         where: { email: data.email }
                     }).then(function (result) {
                         // success
@@ -68,18 +88,26 @@ const userModule = {
                             if (bcrypt.compareSync(data.password, result.dataValues.password)) {
                                 // Passwords match
 
-                                let secret = require("../../config/jwt.json").secret; ///secret key for jwt
-                                let jwt = require("jsonwebtoken");
-                                var obj = {}; // object/info you want to sign
-                                obj.userId = result.dataValues.id;
-                                obj.userName = result.dataValues.name;
-                                obj.userEmail = result.dataValues.email;
+                                if (result.dataValues.status) {
 
-                                var token = jwt.sign(obj, secret); //generating a new JWT
-                                obj.token = token;
+                                    let secret = require("../../config/jwt.json").secret; ///secret key for jwt
+                                    let jwt = require("jsonwebtoken");
+                                    var obj = {}; // object/info you want to sign
+                                    obj.userId = result.dataValues.id;
+                                    obj.userName = result.dataValues.name;
+                                    obj.userEmail = result.dataValues.email;
 
-                                resp.setContent(obj);
-                                reply(resp.getJSON()).code(200)
+                                    var token = jwt.sign(obj, secret); //generating a new JWT
+                                    obj.token = token;
+
+                                    resp.setContent(obj);
+                                    reply(resp.getJSON()).code(200)
+
+                                } else {
+                                    resp.setError(locale.getString("inactive"));
+                                    reply(resp.getJSON()).code(200)
+                                }
+
                             } else {
                                 // Passwords don't match
                                 console.log("no logged")
