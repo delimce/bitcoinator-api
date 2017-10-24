@@ -10,5 +10,8 @@
     },
     "notFound": {
         "es": "registro no encontrado"
+    },
+    "isRegistered": {
+        "es": "El email se encuentra registrado"
     }
 }

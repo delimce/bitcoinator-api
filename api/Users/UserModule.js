@@ -39,26 +39,46 @@ const userModule = {
                             name: Joi.string().regex(/^[a-zA-Z '.-]*$/).required(),
                             lastname: Joi.string().regex(/^[a-zA-Z '.-]*$/).required(),
                             email: Joi.string().email().required(),
-                            password: Joi.string().min(3).max(200).required()
+                            password: Joi.string().min(4).max(200).required()
                         }
                     }
                 },
                 handler: function (request, reply) {
 
                     var data = request.payload   // <-- this is the important line
-                    // Store hash in your password DB.
-                    // you can also build, save and access the object with chaining:
-                    models.User
-                        .build({ name: data.name, lastname: data.lastname, email: data.email, password: bcrypt.hashSync(data.password, 10) })
-                        .save().then(function (data2) {
-                            // success
-                            resp.setContent(data2);
-                            reply(resp.getJSON()).code(201)
-                        }).catch(function (err) {
-                            resp.setError();
-                            console.log(err)
-                            reply(resp.getJSON()).code(500)
-                        })
+                    // find in database
+                    models.User.findOne({
+                        attributes: ['id'],
+                        where: { email: data.email }
+                    }).then(function (result) {
+
+                        if (_.size(result) == 0) {
+
+                            // you can also build, save and access the object with chaining:
+                            models.User.build({ name: data.name, lastname: data.lastname, email: data.email, password: bcrypt.hashSync(data.password, 10) })
+                                .save().then(function (data2) {
+                                    // success
+                                    resp.setContent(data2);
+                                    reply(resp.getJSON()).code(201)
+                                }).catch(function (err) {
+                                    resp.setError();
+                                    console.log(err)
+                                    reply(resp.getJSON()).code(500)
+                                })
+
+                        }else{ ///email exists
+                            resp.setError(locale.getString("isRegistered"));
+                            reply(resp.getJSON()).code(400)
+
+                        }
+
+
+                    }).catch(function (err) {
+                        resp.setError();
+                        console.log(err)
+                        reply(resp.getJSON()).code(500)
+                    })
+
 
                 }
             },
@@ -70,7 +90,7 @@ const userModule = {
                     validate: {
                         payload: {
                             email: Joi.string().email().required(),
-                            password: Joi.string().min(3).max(200).required()
+                            password: Joi.string().min(4).max(200).required()
                         }
                     }
 
@@ -105,20 +125,20 @@ const userModule = {
 
                                 } else {
                                     resp.setError(locale.getString("inactive"));
-                                    reply(resp.getJSON()).code(200)
+                                    reply(resp.getJSON()).code(400)
                                 }
 
                             } else {
                                 // Passwords don't match
                                 console.log("no logged")
                                 resp.setError(locale.getString("notLogged"))
-                                reply(resp.getJSON()).code(200)
+                                reply(resp.getJSON()).code(401)
                             }
 
 
                         } else {
                             resp.setError(locale.getString("notLogged"))
-                            reply(resp.getJSON()).code(200)
+                            reply(resp.getJSON()).code(401)
                         }
 
                     }).catch(function (err) {
