@@ -13,5 +13,8 @@
     },
     "isRegistered": {
         "es": "El email se encuentra registrado"
+    },
+    "isNotRegistered": {
+        "es": "El email No se encuentra registrado"
     }
 }

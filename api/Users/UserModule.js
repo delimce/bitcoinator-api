@@ -189,8 +189,8 @@ const userModule = {
                             reply(resp.getJSON()).code(200);
 
                         } else {
-                            resp.setError(locale.getString("notFound"))
-                            reply(resp.getJSON()).code(200)
+                            resp.setError(locale.getString("isNotRegistered"))
+                            reply(resp.getJSON()).code(400)
                         }
 
                     }).catch(function (err) {
