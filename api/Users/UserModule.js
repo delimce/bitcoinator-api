@@ -46,6 +46,9 @@ const userModule = {
                 handler: function (request, reply) {
 
                     var data = request.payload   // <-- this is the important line
+                    let ip = request.headers['x-forwarded-for'] || request.info.remoteAddress;
+
+
                     // find in database
                     models.User.findOne({
                         attributes: ['id'],

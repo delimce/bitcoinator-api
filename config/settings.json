@@ -1,5 +1,6 @@
 {
     "timezone": "America/Caracas",
     "lang": "es",
-    "langFile": "../../i18n/locale.json"
+    "langFile": "../../i18n/locale.json",
+    "recaptcha":""
 }
