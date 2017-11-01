@@ -30,6 +30,12 @@ const User = db.define('User', {
             type: Sequelize.STRING,
             allowNull: false,
             validate: {}
+        },
+        status: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            defaultValue:0,
+            validate: {}
         }
     },
 
