@@ -8,6 +8,8 @@ let _ = require("underscore");
 let locale = require("../../libs/i18nHelper");
 let email = require("../../libs/EmailHelper");
 
+const Op = require('sequelize').Op; ///operators for sequelize
+
 const userModule = {
     register: function (server, options, next) {
         // add functionality -> we’ll do that in the section below
@@ -52,7 +54,7 @@ const userModule = {
                     // find in database
                     models.User.findOne({
                         attributes: ['id'],
-                        where: { email: data.email }
+                        where: { email: {[Op.eq]: data.email}  }
                     }).then(function (result) {
 
                         if (_.size(result) == 0) {
@@ -103,7 +105,7 @@ const userModule = {
                     var data = request.payload   // <-- this is the important line
                     models.User.findOne({
                         attributes: ['id', 'email', 'name', 'password', 'status'],
-                        where: { email: data.email }
+                        where: { email:{[Op.eq]: data.email } }
                     }).then(function (result) {
                         // success
                         if (_.size(result) > 0) {
@@ -183,7 +185,7 @@ const userModule = {
 
                     models.User.findOne({
                         attributes: ['id', 'email', 'name', 'lastname'],
-                        where: { email: data.email }
+                        where: { email:{[Op.eq]: data.email } }
                     }).then(function (result) {
                         // success
                         if (_.size(result) > 0) { /// user found
