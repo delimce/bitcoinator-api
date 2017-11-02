@@ -7,6 +7,8 @@ let bcrypt = require('bcrypt');
 let _ = require("underscore");
 let locale = require("../../libs/i18nHelper");
 let email = require("../../libs/EmailHelper");
+let config = require("../../config/settings.json");
+let requestify = require('requestify'); ///resource for execute vendor services
 
 const Op = require('sequelize').Op; ///operators for sequelize
 
@@ -41,7 +43,8 @@ const userModule = {
                             name: Joi.string().regex(/^[a-zA-Z '.-]*$/).required(),
                             lastname: Joi.string().regex(/^[a-zA-Z '.-]*$/).required(),
                             email: Joi.string().email().required(),
-                            password: Joi.string().min(4).max(200).required()
+                            password: Joi.string().min(4).max(200).required(),
+                            recaptcha: Joi.string().required()
                         }
                     }
                 },
@@ -50,28 +53,39 @@ const userModule = {
                     var data = request.payload   // <-- this is the important line
                     let ip = request.headers['x-forwarded-for'] || request.info.remoteAddress;
 
-
                     // find in database
                     models.User.findOne({
                         attributes: ['id'],
-                        where: { email: {[Op.eq]: data.email}  }
+                        where: { email: { [Op.eq]: data.email } }
                     }).then(function (result) {
 
-                        if (_.size(result) == 0) {
+                        if (_.size(result) == 0) { ///doesn't exist
 
-                            // you can also build, save and access the object with chaining:
-                            models.User.build({ name: data.name, lastname: data.lastname, email: data.email, password: bcrypt.hashSync(data.password, 10) })
-                                .save().then(function (data2) {
-                                    // success
-                                    resp.setContent(data2);
-                                    reply(resp.getJSON()).code(201)
-                                }).catch(function (err) {
-                                    resp.setError();
-                                    console.log(err)
-                                    reply(resp.getJSON()).code(500)
-                                })
+                            let params = String("secret=" + config.recaptcha + "&" + "response=" + data.recaptcha + "&" + "remoteip=" + ip)
+                            requestify.get('https://www.google.com/recaptcha/api/siteverify?' + params, null)
+                                .then(function (response) {
+                                    // Get the response body
+                                    let recaptchaResponse = response.getBody()
+                                    console.log(recaptchaResponse)
+                                    if (recaptchaResponse.success) {
+                                        // you can also build, save and access the object with chaining:
+                                        models.User.build({ name: data.name, lastname: data.lastname, email: data.email, password: bcrypt.hashSync(data.password, 10) })
+                                            .save().then(function (data2) {
+                                                // success
+                                                resp.setContent(data2);
+                                                reply(resp.getJSON()).code(201)
+                                            }).catch(function (err) {
+                                                resp.setError();
+                                                console.log(err)
+                                                reply(resp.getJSON()).code(500)
+                                            })
+                                    } else {
+                                        resp.setError(locale.getString("recaptchaError"));
+                                        reply(resp.getJSON()).code(400)
+                                    }
+                                });
 
-                        }else{ ///email exists
+                        } else { ///email exists
                             resp.setError(locale.getString("isRegistered"));
                             reply(resp.getJSON()).code(400)
 
@@ -105,7 +119,7 @@ const userModule = {
                     var data = request.payload   // <-- this is the important line
                     models.User.findOne({
                         attributes: ['id', 'email', 'name', 'password', 'status'],
-                        where: { email:{[Op.eq]: data.email } }
+                        where: { email: { [Op.eq]: data.email } }
                     }).then(function (result) {
                         // success
                         if (_.size(result) > 0) {
@@ -185,7 +199,7 @@ const userModule = {
 
                     models.User.findOne({
                         attributes: ['id', 'email', 'name', 'lastname'],
-                        where: { email:{[Op.eq]: data.email } }
+                        where: { email: { [Op.eq]: data.email } }
                     }).then(function (result) {
                         // success
                         if (_.size(result) > 0) { /// user found

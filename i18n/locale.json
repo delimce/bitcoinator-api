@@ -16,5 +16,8 @@
     },
     "isNotRegistered": {
         "es": "El email No se encuentra registrado"
+    },
+    "recaptchaError": {
+        "es": "Falla en el código de validación"
     }
 }
