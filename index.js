@@ -2,7 +2,7 @@
 
 const Hapi = require('hapi');
 const myServer = require("./config/server.json"); ///parameters for server config
-var _ = require("underscore");
+var _ = require("lodash");
 
 // Create a server with a host and port
 const server = new Hapi.Server();
