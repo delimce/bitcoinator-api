@@ -7,6 +7,7 @@ let bcrypt = require('bcrypt');
 let _ = require("lodash");
 let locale = require("../../libs/i18nHelper");
 let email = require("../../libs/EmailHelper");
+let utils = require("../../libs/UtilsHelper");
 let config = require("../../config/settings.json");
 let requestify = require('requestify'); ///resource for execute vendor services
 
@@ -44,7 +45,7 @@ const userModule = {
                             lastname: Joi.string().regex(/^[a-zA-Z '.-]*$/).required(),
                             email: Joi.string().email().required(),
                             password: Joi.string().min(4).max(200).required(),
-                            recaptcha: Joi.string().required()
+                    //        recaptcha: Joi.string().required()
                         }
                     }
                 },
@@ -72,8 +73,18 @@ const userModule = {
                                         models.User.build({ name: data.name, lastname: data.lastname, email: data.email, password: bcrypt.hashSync(data.password, 10) })
                                             .save().then(function (data2) {
                                                 // success
+                   
+                                                
+                                                let regObject = {}
+                                                regObject.id = data2.attributes.id;
+                                                regObject.email = data2.attributes.email;
+                                                regObject.date = data2.attributes.created_at;
+                                                let register_token = utils.jwtSignObject(regObject)
+
                                                 resp.setContent(data2);
                                                 reply(resp.getJSON()).code(201)
+
+
                                             }).catch(function (err) {
                                                 resp.setError();
                                                 console.log(err)
@@ -129,14 +140,12 @@ const userModule = {
 
                                 if (result.dataValues.status) {
 
-                                    let secret = require("../../config/jwt.json").secret; ///secret key for jwt
-                                    let jwt = require("jsonwebtoken");
                                     var obj = {}; // object/info you want to sign
                                     obj.userId = result.dataValues.id;
                                     obj.userName = result.dataValues.name;
                                     obj.userEmail = result.dataValues.email;
 
-                                    var token = jwt.sign(obj, secret); //generating a new JWT
+                                    let token = utils.jwtSignObject(obj); //generating a new JWT
                                     obj.token = token;
 
                                     resp.setContent(obj);
