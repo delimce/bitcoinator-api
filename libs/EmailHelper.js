@@ -1,12 +1,14 @@
 'use strict';
 
-var mail = require('nodemailer');
+let mail = require('nodemailer');
+const sendgridTransport = require('nodemailer-sendgrid-transport');
 
 const sgMail = require('@sendgrid/mail'); ///sendGrid
 
 let mailConfig = require("../config/email.json");
 
-let transporter = mail.createTransport(mailConfig.smtp);
+///send by smtp
+//let transporter = mail.createTransport(mailConfig.smtp);
 
 let message = {
     from: mailConfig.defaultFromEmail,
@@ -15,6 +17,16 @@ let message = {
     text: '',
     html: ''
 };
+
+
+// Configure Nodemailer SendGrid Transporter
+const transporter = mail.createTransport(
+    sendgridTransport({
+      auth: {
+        api_key: mailConfig.sendgrid
+      },
+    })
+  );
 
 
 exports.setFrom = function (value) {
@@ -43,20 +55,10 @@ exports.send = function () {
         if (error) {
             console.log(error);
         } else {
-            console.log('Email Sent: ' + info.response);
+            console.log('Email Sent: ' + info);
         }
     });
 
 }
-
-
-exports.SGsend = function () {
-    
-    sgMail.setApiKey(mailConfig.sendgrid);
-
-    sgMail.send(message);
-    
-    }
-
 
 

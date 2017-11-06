@@ -45,7 +45,7 @@ const userModule = {
                             lastname: Joi.string().regex(/^[a-zA-Z '.-]*$/).required(),
                             email: Joi.string().email().required(),
                             password: Joi.string().min(4).max(200).required(),
-                    //        recaptcha: Joi.string().required()
+                            //        recaptcha: Joi.string().required()
                         }
                     }
                 },
@@ -73,13 +73,13 @@ const userModule = {
                                         models.User.build({ name: data.name, lastname: data.lastname, email: data.email, password: bcrypt.hashSync(data.password, 10) })
                                             .save().then(function (data2) {
                                                 // success
-                   
-                                                
+
+
                                                 let regObject = {}
                                                 regObject.id = data2.attributes.id;
                                                 regObject.email = data2.attributes.email;
                                                 regObject.date = data2.attributes.created_at;
-                                                let register_token = utils.jwtSignObject(regObject)
+                                                let register_token = utils.jwtEncodeObject(regObject)
 
                                                 resp.setContent(data2);
                                                 reply(resp.getJSON()).code(201)
@@ -145,7 +145,7 @@ const userModule = {
                                     obj.userName = result.dataValues.name;
                                     obj.userEmail = result.dataValues.email;
 
-                                    let token = utils.jwtSignObject(obj); //generating a new JWT
+                                    let token = utils.jwtEncodeObject(obj); //generating a new JWT
                                     obj.token = token;
 
                                     resp.setContent(obj);
@@ -188,9 +188,8 @@ const userModule = {
                     email.setTo("delimce@gmail.com");
                     email.setSubject("probando");
                     email.setContentHtml("algo");
-                    email.setContentText("algo");
 
-                    email.SGsend();
+                    email.send();
 
                     var credentials = request.auth.credentials; ///jwt payload
                     reply(credentials);
@@ -212,8 +211,14 @@ const userModule = {
                     }).then(function (result) {
                         // success
                         if (_.size(result) > 0) { /// user found
+                            let myData = {};
+                            myData.userId = result.dataValues.id;
+                            myData.email = result.dataValues.email;
+                            myData.fullname = result.dataValues.name + " " + result.dataValues.lastname;
 
-                            resp.setContent(result.dataValues);
+                            let myToken = utils.jwtEncodeObject(myData)
+
+                            resp.setContent(myToken);
                             reply(resp.getJSON()).code(200);
 
                         } else {
@@ -226,6 +231,26 @@ const userModule = {
                         console.log(err)
                         reply(resp.getJSON()).code(500)
                     })
+
+                }
+            },
+            {
+                method: 'GET',
+                path: conf.basePath + "/activated",
+                config: { auth: false },
+                handler: function (request, reply) {
+
+                    let params = request.query
+                    if (params.token) { ///token is received
+
+                        let my_token = utils.jwtDecodeObject(params.token)
+                        reply(my_token).code(200)
+
+                    } else {
+                        resp.setError(locale.getString("isNotRegistered"))
+                        reply(resp.getJSON()).code(400)
+                    }
+
 
                 }
             }
