@@ -1,29 +1,23 @@
-const my_module = {
-    register: function (server, options, next) {
-        // add functionality -> we’ll do that in the section below
+const myModule = {
+    register: async (server, options) => {
+        // Do your registration stuff
 
         server.route({
             method: 'GET',
             path: '/test',
             config: { auth: false },
-            handler: function (request, reply) {
+            handler: function (request, h) {
                 let locale = require("../libs/i18nHelper");
                 console.log(locale.getString("Welcome"));
-          
-                reply("testing at: "+request.info.host || request.connection.info.host + ':' + request.connection.info.port);
-
+                return "testing at: " + request.info.host || request.connection.info.host + ':' + request.connection.info.port;
             }
         })
 
-        // call next() to signal hapi that your plugin has done the job
-        next()
-    }
-}
+    },
+    name: 'myModule',
+    version: '1.0.0',
+    once: true,
+    options: {}
+};
 
-
-my_module.register.attributes = {
-    name: 'myplugin',
-    version: '1.0.0'
-}
-
-module.exports = my_module
+module.exports = myModule;

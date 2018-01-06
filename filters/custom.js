@@ -1,28 +1,22 @@
 const custom_filter = {
-    register: function (server, options, next) {
-        // add functionality -> we’ll do that in the section below
+    register: async (server, options) => {
+        // Do your registration stuff
 
-
-        server.route([{
+        server.route({
             method: ['GET', 'POST'],
             path: '/{p*}',
             config: { auth: false },
-            handler: function (request, reply) {
-                reply('not found').code(404)
+            handler: function (request, h) {
+                let Boom = require('boom')
+                return Boom.notFound('resource not found')
             }
-        }
-        ]);
+        })
 
-
-        // call next() to signal hapi that your plugin has done the job
-        next()
-    }
-}
-
-
-custom_filter.register.attributes = {
+    },
     name: 'custom',
-    version: '1.0.0'
-}
+    version: '1.0.0',
+    once: true,
+    options: {}
+};
 
-module.exports = custom_filter
+module.exports = custom_filter;
