@@ -26,6 +26,7 @@
     "@sendgrid/mail": "^6.1.4",
     "bcrypt": "^1.0.2",
     "boom": "^7.1.1",
+    "glue": "^5.0.0",
     "hapi": "~17.1.1",
     "hapi-auth-jwt2": "^7.3.0",
     "i18n-nodejs": "^3.0.0",

@@ -1,27 +1,36 @@
 'use strict';
 
-const Hapi = require('hapi');
+
+const Glue = require('glue');
 const myServer = require("./config/server.json"); ///parameters for server config
 
-// Create a server with a host and port
+const manifest = {
+    server:myServer.dev,
+    register: {
+        plugins: [
+          "./api/my_module",
+          "./filters/custom"
+        ],
+        options: {
+            once: true
+        }
+    }
+};
 
-////connect server 1
-const server = new Hapi.Server(myServer.dev)
+const options = {
+    relativeTo: __dirname
+};
 
-const start = async () => {
+const startServer = async function () {
+    try {
+        const server = await Glue.compose(manifest, options);
+        await server.start();
+        console.log('Server started at: ' + server.info.uri);
+    }
+    catch (err) {
+        console.error(err);
+        process.exit(1);
+    }
+};
 
-    await server.register({
-       
-      
-        plugin:require("./api/my_module")
-      })
-
-      await server.register({
-        plugin:require("./filters/custom")
-      })
-
-    await server.start();
-    console.log('Server started at: ' + server.info.uri);
-}
-
-start();
+startServer();
