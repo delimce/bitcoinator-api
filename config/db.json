@@ -7,7 +7,7 @@
     "dialect": "mysql"
   },
   "dev": {
-    "url": "mysql://root:delimce@xserver/bitcoinator_db",
+    "url": "mysql://root:delimce@zserver/marketplace_db",
     "pool": {
       "max": 10,
       "min": 0,

@@ -38,7 +38,7 @@
     "nodemailer": "^4.0.1",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "requestify": "^0.2.5",
-    "sequelize": "^4.13.5"
+    "sequelize": "^4.28.6"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"

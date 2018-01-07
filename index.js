@@ -8,8 +8,10 @@ const manifest = {
     server:myServer.dev,
     register: {
         plugins: [
+          "inert",
           "./api/my_module",
-          "./filters/custom"
+          "./filters/custom",
+          require("./api/Users/UserModule")
         ],
         options: {
             once: true
