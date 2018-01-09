@@ -11,6 +11,7 @@ const manifest = {
           "inert",
           "./api/my_module",
           "./filters/custom",
+          require("./filters/jwt_bundle"),
           require("./api/Users/UserModule")
         ],
         options: {
@@ -36,3 +37,14 @@ const startServer = async function () {
 };
 
 startServer();
+
+
+// listen on SIGINT signal and gracefully stop the server
+process.on('SIGINT', function () {  
+    console.log('stopping hapi server')
+  
+    server.stop({ timeout: 10000 }).then(function (err) {
+      console.log('hapi server stopped')
+      process.exit((err) ? 1 : 0)
+    })
+  })

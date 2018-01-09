@@ -103,7 +103,6 @@ const userModule = {
 
                         // success
                         if (!_.isNull(result)) {
-                            console.log("dos")
                             if (bcrypt.compareSync(data.password, result.dataValues.password)) {
                                 // Passwords match
                                 if (result.dataValues.status) {
@@ -176,22 +175,16 @@ const userModule = {
 
             {
                 method: 'PUT',
-                path: conf.basePath + "/changePassord",
+                path: conf.basePath + "/changePassword",
                 config: {
-                    auth: false,
-                    validate: {
-                        payload: {
-                            token: Joi.string().required(),
-                            password: Joi.string().min(4).max(200).required()
-                        }
-                    }
+                    auth: 'jwt'
                 },
                 handler: async (request, h) => {
 
                     var data = request.payload   // <-- this is the important line
                     try {
 
-                     
+                        return request.auth.credentials
 
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)

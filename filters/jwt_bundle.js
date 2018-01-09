@@ -1,56 +1,45 @@
 
 let settings = require("../config/settings.json");
+let utils = require("../libs/UtilsHelper");
+const Boom = require('boom');
 const jwt_bundle = {
-    register: function (server, options, next) {
+    register: async (server, options) => {
         // add functionality -> we’ll do that in the section below
+        const jwtConfig = require("../config/jwt.json");
 
+        const scheme = function (server, options) {
 
-        // bring your own validation function
-        var validate = function (decoded, request, callback) {
+            return {
+                api: {
+                    settings: {
+                        x: 5
+                    }
+                },
+                authenticate: function (request, h) {
 
+                    const authorization = request.headers.authorization;
+                    if (!authorization) {
+                        throw Boom.unauthorized(null, 'Custom');
+                    }
 
+                    let credentials = utils.jwtDecodeObject(authorization);
+                    let data = { "credentials": credentials }
 
-            var moment = require('moment-timezone');
-           let timeu =  moment.tz(new Date,settings.timezone);
-
-           console.log(timeu)
-
-            // do your checks to see if the person is valid
-
-            /*    if (!people[decoded.id]) {
-             return callback(null, false);
-             }
-             else {
-             return callback(null, true);
-             }*/
-
-            return callback(null, true);
-
-
+                    return (!credentials) ? Boom.unauthorized(null, 'Custom') : h.authenticated(data);
+                }
+            };
         };
 
-
-        const token = require("../config/jwt.json");
-
-        server.auth.strategy('jwt', 'jwt',
-            {
-                key: token.secret,          // Never Share your secret key
-                validateFunc: validate,            // validate function defined above
-                verifyOptions: { algorithms: ['HS256'] } // pick a strong algorithm
-            });
-
+        server.auth.scheme('custom', scheme);
+        server.auth.strategy('jwt', 'custom');
         server.auth.default('jwt');
 
 
-        // call next() to signal hapi that your plugin has done the job
-        next()
-    }
-}
-
-
-jwt_bundle.register.attributes = {
+    },
     name: 'jwt_bundle',
-    version: '1.0.0'
-};
+    version: '1.0.0',
+    once: true,
+    options: {}
+}
 
 module.exports = jwt_bundle;
