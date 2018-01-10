@@ -36,16 +36,7 @@ const userModule = {
                 method: 'POST',
                 path: conf.basePath + "/new",
                 config: {
-                    auth: conf.auth,
-                    validate: {
-                        payload: {
-                            name: Joi.string().regex(/^[a-zA-Z '.-]*$/).required(),
-                            lastname: Joi.string().regex(/^[a-zA-Z '.-]*$/).required(),
-                            email: Joi.string().email().required(),
-                            password: Joi.string().min(4).max(200).required(),
-                            //        recaptcha: Joi.string().required()
-                        }
-                    }
+                    auth: conf.auth
                 },
                 handler: async (request, h) => {
 
@@ -61,9 +52,27 @@ const userModule = {
                         if (_.isNull(result)) { ///doesn't exist
 
                             try {
-                                // you can also build, save and access the object with chaining:
-                                let newUser = models.User.build({ name: data.name, lastname: data.lastname, email: data.email, password: bcrypt.hashSync(data.password, 10) }).save()
-                                return newUser;
+
+
+                                let params = await String("secret=" + config.recaptcha + "&" + "response=" + data.recaptcha + "&" + "remoteip=" + ip)
+                                let googleRecap = await requestify.get('https://www.google.com/recaptcha/api/siteverify?' + params, null)
+                                let recaptchaResponse = googleRecap.getBody()
+                                console.log(recaptchaResponse)
+                                if (recaptchaResponse.success) {
+
+                                    // you can also build, save and access the object with chaining:
+                                    let newUser = await models.User.build({ name: data.name, lastname: data.lastname, email: data.email, password: bcrypt.hashSync(data.password, 10) }).save()
+
+                                    let regObject = {}
+                                    regObject.id = data2.attributes.id;
+                                    regObject.email = data2.attributes.email;
+                                    regObject.date = data2.attributes.created_at;
+                                    let register_token = utils.jwtEncodeObject(regObject)
+                                    return regObject;
+
+                                } else {
+                                    return Boom.badRequest(locale.getString("recaptchaError"))
+                                }
 
                             } catch (err) {
                                 return Boom.badImplementation('Failed to get....', err)
@@ -272,7 +281,7 @@ const userModule = {
 
             //     }
             // },
-    
+
             // {
             //     method: 'GET',
             //     path: conf.basePath + "/activated",

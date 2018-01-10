@@ -5,8 +5,7 @@
         "routes": {
             "cors": {
                 "origin": [
-                    "http://localhost",
-                    "http://*.domain.com"
+                    "*"
                 ]
             }
         }
