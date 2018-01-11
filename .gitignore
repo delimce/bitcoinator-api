@@ -23,4 +23,4 @@ npm-debug.log
 # oasis generated files
 setup.data
 setup.log
-.config/db.json
+config/db.json
