@@ -8,13 +8,11 @@ let locale = require("../../libs/i18nHelper");
 let email = require("../../libs/EmailHelper");
 let utils = require("../../libs/UtilsHelper");
 let config = require("../../config/settings.json");
-let requestify = require('requestify'); ///resource for execute vendor services
+let cmc = require("../../libs/CmcHelper");
 
 const cmcModule = {
     register: async (server, options) => {
         // add functionality -> we’ll do that in the section below
-
-       
 
         server.route([
             {
@@ -27,11 +25,32 @@ const cmcModule = {
 
                     try {
 
-                        let coinMarketCap = await requestify.get('https://api.coinmarketcap.com/v1/ticker/');
-                        return coinMarketCap.getBody()
+                        let coinMarketCap = cmc.getAll()
+                        return coinMarketCap
 
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)
+                    }
+
+                }
+            },
+
+            {
+                method: 'get',
+                path: conf.basePath + "/getById/{id}",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+
+                    try {
+
+                        let id = await request.params.id
+                        let coinMarketCap = cmc.getById(id)
+                        return coinMarketCap
+
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....',err)
                     }
 
                 }
