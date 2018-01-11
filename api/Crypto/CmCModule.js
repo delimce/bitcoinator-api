@@ -3,7 +3,7 @@ const conf = require("./config.json");
 const models = require("../../models");
 const Boom = require('boom');
 const Joi = require('joi');
-let _ = require("lodash");
+const _ = require("lodash");
 let locale = require("../../libs/i18nHelper");
 let email = require("../../libs/EmailHelper");
 let utils = require("../../libs/UtilsHelper");
@@ -50,7 +50,32 @@ const cmcModule = {
                         return coinMarketCap
 
                     } catch (err) {
-                        return Boom.badImplementation('Failed to get....',err)
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
+
+                }
+            },
+
+            {
+                method: 'get',
+                path: conf.basePath + "/bestProfit/{interval}",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+
+                    try {
+
+                        let coinMarketCap = await cmc.getAll();
+
+
+                        let best24 = _.orderBy(coinMarketCap, 'percent_change_24h');
+
+
+                        return best24
+
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....', err)
                     }
 
                 }
