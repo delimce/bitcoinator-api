@@ -17,7 +17,7 @@ const cmcModule = {
         server.route([
             {
                 method: 'get',
-                path: conf.basePath + "/getAll",
+                path: conf.basePath + "/getCoins",
                 config: {
                     auth: false
                 },
@@ -37,7 +37,7 @@ const cmcModule = {
 
             {
                 method: 'get',
-                path: conf.basePath + "/getById/{id}",
+                path: conf.basePath + "/getCoins/{id}",
                 config: {
                     auth: false
                 },
@@ -58,7 +58,7 @@ const cmcModule = {
 
             {
                 method: 'get',
-                path: conf.basePath + "/bestProfit/{interval}",
+                path: conf.basePath + "/myCoins",
                 config: {
                     auth: false
                 },
@@ -66,13 +66,9 @@ const cmcModule = {
 
                     try {
 
-                        let coinMarketCap = await cmc.getAll();
+                        let coinMarketCap = await cmc.findCoins()
 
-
-                        let best24 = _.orderBy(coinMarketCap, 'percent_change_24h');
-
-
-                        return best24
+                        return coinMarketCap
 
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)

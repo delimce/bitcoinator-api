@@ -5,24 +5,10 @@ let _ = require("lodash");
 
 
 
-
 exports.getAll = async function () {
 
     let coinMarketCap = await requestify.get('https://api.coinmarketcap.com/v1/ticker/');
     return coinMarketCap.getBody()
-
-}
-
-exports.bestProfit = async function (interval) {
-
-    let intervals = [
-        { "key": '24h', "value": 'percent_change_24h' },
-        { "key": '1h', "value": 'percent_change_1h' },
-        { "key": '7d', "value": 'percent_change_7d' }
-    ]
-
-    let coinMarketCap = await requestify.get('https://api.coinmarketcap.com/v1/ticker/');
-    let best24 = _.orderBy(coinMarketCap.getBody(), _.get(intervals, "key", interval));
 
 }
 
@@ -34,5 +20,32 @@ exports.getById = async function (coin) {
     let coinMarketCap = await requestify.get(endPoint);
 
     return coinMarketCap.getBody()
+
+}
+
+exports.findCoins = async function () {
+
+    let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH']
+
+    let coinMarketCap = await requestify.get('https://api.coinmarketcap.com/v1/ticker/');
+
+    let newCoins = [];
+
+    _.forEach(coinMarketCap.getBody(), function (coin) {
+        if (_.includes(coins, coin.symbol)) {
+            let newCoin = {}
+            newCoin.id = coin.id;
+            newCoin.symbol = coin.symbol;
+            newCoin.price_usd = Number(coin.price_usd);
+            newCoin.price_btc = Number(coin.price_btc);
+            newCoin.percent_1h = Number(coin.percent_change_1h);
+            newCoin.percent_24h = Number(coin.percent_change_24h);
+            newCoin.percent_7d = Number(coin.percent_change_7d);
+            newCoins.push(newCoin)
+        }
+    });
+
+
+    return newCoins;
 
 }
