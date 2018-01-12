@@ -15,7 +15,7 @@
         "port": 80
     },
     "prod": {
-        "host": "localhost",
+        "host": "45.32.214.171",
         "port": 8082
     }
 }
