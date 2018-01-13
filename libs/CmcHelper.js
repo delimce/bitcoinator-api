@@ -25,7 +25,7 @@ exports.getById = async function (coin) {
 
 exports.findCoins = async function () {
 
-    let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH']
+    let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH','BTG']
 
     let coinMarketCap = await requestify.get('https://api.coinmarketcap.com/v1/ticker/');
 
@@ -41,11 +41,13 @@ exports.findCoins = async function () {
             newCoin.percent_1h = Number(coin.percent_change_1h);
             newCoin.percent_24h = Number(coin.percent_change_24h);
             newCoin.percent_7d = Number(coin.percent_change_7d);
+            newCoin.percent4rent = _.round(newCoin.percent_1h+newCoin.percent_24h,3);
+
             newCoins.push(newCoin)
         }
     });
 
 
-    return newCoins;
+    return _.orderBy(newCoins,['percent4rent'],['desc']);
 
 }
