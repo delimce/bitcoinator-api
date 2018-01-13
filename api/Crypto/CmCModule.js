@@ -68,7 +68,12 @@ const cmcModule = {
 
                         let coinMarketCap = await cmc.findCoins()
 
-                        return coinMarketCap
+
+                        return h.view('cmc/coins', {
+                            coins: coinMarketCap,
+                            message: 'Hello Handlebars!'
+                        });
+
 
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)

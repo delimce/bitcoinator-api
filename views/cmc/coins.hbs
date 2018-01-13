@@ -1,0 +1,16 @@
+<h2>CMC main coins:</h2>
+<article>
+    {{#each coins}}
+        <div class="row">
+            <span>{{id}} <b>({{symbol}})</b></span>
+            <span>(price:) ${{price_usd}}</span>
+            <span>(profit:)
+                {{#if profit}}
+                  <span style="color: blue;font-weight: bold">{{percent4rent}}</span>
+                {{else}}
+                    <span style="color: red;font-weight: bold">{{percent4rent}}</span>
+                {{/if}}
+               </span>
+        </div>
+    {{/each}}
+</article>
