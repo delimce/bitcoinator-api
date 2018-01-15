@@ -15,7 +15,7 @@
     }
   },
     "prod": {
-    "url": "mysql://root:delimce@xserver/tiendaun_db",
+    "url": "mysql://root:delimce@localhost/marketplace_db",
     "pool": {
       "max": 8,
       "min": 0,
