@@ -14,7 +14,8 @@ const manifest = {
             "./filters/custom",
             require("./filters/jwt_bundle"),
             require("./api/Users/UserModule"),
-            require("./api/Crypto/CmCModule")
+            require("./api/Crypto/CmCModule"),
+            require("./api/Calc/CalcModule"),
         ],
         options: {
             once: true
