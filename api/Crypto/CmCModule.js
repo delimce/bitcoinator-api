@@ -80,7 +80,28 @@ const cmcModule = {
                     }
 
                 }
+            },
+
+            {
+                method: 'get',
+                path: conf.basePath + "/mCoins",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+
+                    try {
+
+                        let coinMarketCap = await cmc.findCoins()
+                        return coinMarketCap
+
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
+
+                }
             }
+
         ])
 
     },
