@@ -126,8 +126,8 @@ const cmcModule = {
                                 newCoin.symbol = coin.symbol;
                                 newCoin.type = "crypto",
                                 newCoin.price_usd = Number(coin.price_usd);
-                                newCoin.percent4rent = _.round(Number(coin.percent_change_1h) + Number(coin.percent_change_24h), 3);
-                                newCoin.profit = (newCoin.percent4rent >= 0) ? true : false
+                                newCoin.percent4rent =coin.percent4rent;
+                                newCoin.profit = coin.profit;
 
                             currency.push(newCoin)
 
