@@ -121,13 +121,13 @@ const cmcModule = {
                         ////cmc data
                         _.forEach(coinMarketCap, function (coin) {
 
-                                let newCoin = {}
-                                newCoin.id = coin.id;
-                                newCoin.symbol = coin.symbol;
-                                newCoin.type = "crypto",
-                                newCoin.price_usd = Number(coin.price_usd);
-                                newCoin.percent4rent = _.round(Number(coin.percent_change_1h) + Number(coin.percent_change_24h), 3);
-                                newCoin.profit = (newCoin.percent4rent >= 0) ? true : false
+                            let newCoin = {}
+                            newCoin.id = coin.id;
+                            newCoin.symbol = coin.symbol;
+                            newCoin.type = "crypto",
+                            newCoin.price_usd = coin.price_usd;
+                            newCoin.percent4rent = coin.percent4rent
+                            newCoin.profit = (newCoin.percent4rent >= 0) ? true : false
 
                             currency.push(newCoin)
 
@@ -135,23 +135,23 @@ const cmcModule = {
 
 
                         ///dolartoday data
-                        let dolar ={
-                            "id":"USD",
-                            "symbol":"$",
-                            "type":"fiat",
-                            "price_bs":Number(dolartoday.USD.dolartoday),
-                            "price_usd":1
+                        let dolar = {
+                            "id": "USD",
+                            "symbol": "$",
+                            "type": "fiat",
+                            "price_bs": Number(dolartoday.USD.dolartoday),
+                            "price_usd": 1
                         }
 
                         currency.push(dolar)
 
-                        let euro ={
-                            "id":"EUR",
-                            "symbol":"€",
-                            "type":"fiat",
-                            "price_bs":Number(dolartoday.EUR.dolartoday),
-                            "price_usd":Number(dolartoday.EURUSD.rate)
-                           
+                        let euro = {
+                            "id": "EUR",
+                            "symbol": "€",
+                            "type": "fiat",
+                            "price_bs": Number(dolartoday.EUR.dolartoday),
+                            "price_usd": Number(dolartoday.EURUSD.rate)
+
                         }
 
                         currency.push(euro)
