@@ -5,7 +5,7 @@ const Glue = require('glue');
 const myServer = require("./config/server.json"); ///parameters for server config
 
 const manifest = {
-    server: myServer.prod,
+    server: myServer.dev,
     register: {
         plugins: [
             "inert",
