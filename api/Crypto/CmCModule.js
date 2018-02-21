@@ -135,19 +135,19 @@ const cmcModule = {
 
 
                         ///dolartoday data
-                        let dolar ={
-                            "id":"USD",
-                            "symbol":"$",
+                        let dollar ={
+                            "id":"dollar",
+                            "symbol":"USD",
                             "type":"fiat",
                             "price_bs":Number(dolartoday.USD.dolartoday),
                             "price_usd":1
                         }
 
-                        currency.push(dolar)
+                        currency.push(dollar)
 
                         let euro ={
-                            "id":"EUR",
-                            "symbol":"€",
+                            "id":"euro",
+                            "symbol":"EUR",
                             "type":"fiat",
                             "price_bs":Number(dolartoday.EUR.dolartoday),
                             "price_usd":Number(dolartoday.EURUSD.rate)
