@@ -156,8 +156,6 @@ const cmcModule = {
 
                         currency.push(euro)
 
-
-
                         return currency
 
                     } catch (err) {
