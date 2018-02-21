@@ -9,6 +9,7 @@ let email = require("../../libs/EmailHelper");
 let utils = require("../../libs/UtilsHelper");
 let config = require("../../config/settings.json");
 let cmc = require("../../libs/CmcHelper");
+let dtoday = require("../../libs/DTodayHelper");
 
 const cmcModule = {
     register: async (server, options) => {
@@ -100,7 +101,72 @@ const cmcModule = {
                     }
 
                 }
+            },
+
+            {
+                method: 'get',
+                path: "/rekorbit/maindata",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+
+                    try {
+
+                        let coinMarketCap = await cmc.findCoins()
+                        let dolartoday = await dtoday.getToday()
+
+                        let currency = []
+
+                        ////cmc data
+                        _.forEach(coinMarketCap, function (coin) {
+
+                                let newCoin = {}
+                                newCoin.id = coin.id;
+                                newCoin.symbol = coin.symbol;
+                                newCoin.type = "crypto",
+                                newCoin.price_usd = Number(coin.price_usd);
+                                newCoin.percent4rent = _.round(Number(coin.percent_change_1h) + Number(coin.percent_change_24h), 3);
+                                newCoin.profit = (newCoin.percent4rent >= 0) ? true : false
+
+                            currency.push(newCoin)
+
+                        });
+
+
+                        ///dolartoday data
+                        let dolar ={
+                            "id":"USD",
+                            "symbol":"$",
+                            "type":"fiat",
+                            "price_bs":Number(dolartoday.USD.dolartoday),
+                            "price_usd":1
+                        }
+
+                        currency.push(dolar)
+
+                        let euro ={
+                            "id":"EUR",
+                            "symbol":"€",
+                            "type":"fiat",
+                            "price_bs":Number(dolartoday.EUR.dolartoday),
+                            "price_usd":Number(dolartoday.EURUSD.rate)
+                           
+                        }
+
+                        currency.push(euro)
+
+
+
+                        return currency
+
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
+
+                }
             }
+
 
         ])
 
