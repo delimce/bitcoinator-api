@@ -125,7 +125,8 @@ const cmcModule = {
                                 newCoin.id = coin.id;
                                 newCoin.symbol = coin.symbol;
                                 newCoin.type = "crypto",
-                                newCoin.price_usd = Number(coin.price_usd);
+                                newCoin.price_btc = coin.price_btc;
+                                newCoin.price_usd = coin.price_usd;
                                 newCoin.percent4rent =coin.percent4rent;
                                 newCoin.profit = coin.profit;
 
