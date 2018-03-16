@@ -159,7 +159,7 @@ const cmcModule = {
                         currency.push(euro)
 
                         let gold ={
-                            "id":"gold-gram",
+                            "id":"gold (gram)",
                             "symbol":"GOLD",
                             "type":"fiat",
                             "price_bs":Number(dolartoday.USD.dolartoday*price_gold_gram),
