@@ -11,3 +11,9 @@ exports.getToday = async function () {
     return $today.getBody()
 
 }
+
+exports.goldPriceGram = async function (oz_price) {
+    let gramxOz = 0.035274;
+    return await gramxOz*oz_price
+
+}

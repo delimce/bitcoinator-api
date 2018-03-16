@@ -115,6 +115,7 @@ const cmcModule = {
 
                         let coinMarketCap = await cmc.findCoins()
                         let dolartoday = await dtoday.getToday()
+                        let price_gold_gram = await dtoday.goldPriceGram(dolartoday.GOLD.rate)
 
                         let currency = []
 
@@ -156,6 +157,16 @@ const cmcModule = {
                         }
 
                         currency.push(euro)
+
+                        let gold ={
+                            "id":"gold (gram)",
+                            "symbol":"GOLD",
+                            "type":"fiat",
+                            "price_bs":Number(dolartoday.USD.dolartoday*price_gold_gram),
+                            "price_usd":Number(price_gold_gram)
+                        }
+
+                        currency.push(gold)
 
                         return currency
 
