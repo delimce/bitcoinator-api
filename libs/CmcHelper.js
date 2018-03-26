@@ -22,9 +22,7 @@ exports.getById = async function (coin) {
 
 }
 
-exports.findCoins = async function () {
-
-    let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH', 'BTG']
+exports.findCoins = async function (coins) {
 
     let coinMarketCap = await requestify.get('https://api.coinmarketcap.com/v1/ticker/');
 

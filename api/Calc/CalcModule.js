@@ -3,10 +3,6 @@ const conf = require("./config.json");
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require("lodash");
-
-let locale = require("../../libs/i18nHelper");
-let utils = require("../../libs/UtilsHelper");
-let config = require("../../config/settings.json");
 let $today = require("../../libs/DTodayHelper");
 
 const calcModule = {
@@ -33,6 +29,25 @@ const calcModule = {
                         return Boom.badImplementation('Failed to get....', err)
                     }
 
+                }
+            },
+
+            {
+                method: 'get',
+                path: conf.basePath + "/dolartoday/{id}",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+                    try {
+                        let dtInfo = await $today.getToday()
+                        let id = await request.params.id
+                        let fiat = (String(id).toLowerCase()=="dollar")?dtInfo.USD:dtInfo.EUR
+                        return fiat
+
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
                 }
             }
         ])

@@ -1,6 +1,5 @@
 'use strict'
 const conf = require("./config.json");
-const models = require("../../models");
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require("lodash");
@@ -45,7 +44,6 @@ const cmcModule = {
                 handler: async (request, h) => {
 
                     try {
-
                         let id = await request.params.id
                         let coinMarketCap = cmc.getById(id)
                         return coinMarketCap
@@ -113,7 +111,9 @@ const cmcModule = {
 
                     try {
 
-                        let coinMarketCap = await cmc.findCoins()
+                        let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH', 'BTG','ZEC']
+
+                        let coinMarketCap = await cmc.findCoins(coins)
                         let dolartoday = await dtoday.getToday()
                         let price_gold_gram = await dtoday.goldPriceGram(dolartoday.GOLD.rate)
 
@@ -159,9 +159,9 @@ const cmcModule = {
                         currency.push(euro)
 
                         let gold ={
-                            "id":"gold-gram",
+                            "id":"gold",
                             "symbol":"GOLD",
-                            "type":"fiat",
+                            "type":"commodity",
                             "price_bs":Number(dolartoday.USD.dolartoday*price_gold_gram),
                             "price_usd":Number(price_gold_gram)
                         }
