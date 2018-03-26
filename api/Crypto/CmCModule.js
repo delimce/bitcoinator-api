@@ -65,7 +65,8 @@ const cmcModule = {
 
                     try {
 
-                        let coinMarketCap = await cmc.findCoins()
+                        let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH', 'BTG','ZEC']
+                        let coinMarketCap = await cmc.findCoins(coins)
 
 
                         return h.view('cmc/coins', {
