@@ -24,6 +24,7 @@
   "homepage": "https://github.com/delimce/bitcoinator-api#readme",
   "dependencies": {
     "@sendgrid/mail": "^6.1.4",
+    "base64-img": "^1.0.4",
     "bcrypt": "^1.0.2",
     "boom": "^7.1.1",
     "glue": "^5.0.0",

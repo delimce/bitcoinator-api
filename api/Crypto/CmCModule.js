@@ -3,6 +3,7 @@ const conf = require("./config.json");
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require("lodash");
+let base64Img = require('base64-img');
 let locale = require("../../libs/i18nHelper");
 let email = require("../../libs/EmailHelper");
 let utils = require("../../libs/UtilsHelper");
@@ -68,9 +69,26 @@ const cmcModule = {
                         let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH', 'BTG','ZEC']
                         let coinMarketCap = await cmc.findCoins(coins)
 
+                        let currency = []
+
+                        ////cmc data
+                        _.forEach(coinMarketCap, function (coin) {
+
+                            let newCoin = {}
+                            newCoin.id = coin.id;
+                            newCoin.symbol = coin.symbol;
+                            newCoin.price_usd = coin.price_usd;
+                            newCoin.percent4rent =coin.percent4rent;
+                            newCoin.profit = coin.profit;
+                            newCoin.image = base64Img.base64Sync('./assets/images/svg/'+newCoin.symbol.toLowerCase()+".svg");
+
+                            currency.push(newCoin)
+
+                        });
+
 
                         return h.view('cmc/coins', {
-                            coins: coinMarketCap,
+                            coins: currency,
                             message: 'Hello Handlebars!'
                         });
 
@@ -131,6 +149,7 @@ const cmcModule = {
                                 newCoin.price_usd = coin.price_usd;
                                 newCoin.percent4rent =coin.percent4rent;
                                 newCoin.profit = coin.profit;
+                                newCoin.image = base64Img.base64Sync('./assets/images/svg/'+newCoin.symbol.toLowerCase()+".svg");
 
                             currency.push(newCoin)
 
