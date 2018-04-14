@@ -121,7 +121,7 @@ const cmcModule = {
             },
 
             {
-                method: 'get',
+                method: 'post',
                 path: "/rekorbit/maindata",
                 config: {
                     auth: false
@@ -130,8 +130,7 @@ const cmcModule = {
 
                     try {
 
-                        let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH', 'BTG','ZEC']
-
+                        let coins = request.payload   // <-- crypto coin list
                         let coinMarketCap = await cmc.findCoins(coins)
                         let dolartoday = await dtoday.getToday()
                         let price_gold_gram = await dtoday.goldPriceGram(dolartoday.GOLD.rate)
