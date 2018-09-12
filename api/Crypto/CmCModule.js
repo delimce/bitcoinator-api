@@ -135,6 +135,9 @@ const cmcModule = {
                         let coinMarketCap = await cmc.findCoins(coins)
                         let dolartoday = await dtoday.getToday()
                         let price_gold_gram = await dtoday.goldPriceGram(dolartoday.GOLD.rate)
+                        let argUsd = await dtoday.getPesoArg()
+                        let ars_max = (argUsd.libre>argUsd.blue)?argUsd.libre:argUsd.blue;
+
 
                         let currency = []
 
@@ -178,6 +181,17 @@ const cmcModule = {
 
                         currency.push(euro)
 
+
+                        let arg ={
+                            "id":"arg",
+                            "symbol":"ARS",
+                            "type":"fiat",
+                            "price_bs":Number((1/ars_max)*dolartoday.USD.dolartoday),
+                            "price_usd":Number(1/ars_max)
+                        }
+
+                        currency.push(arg)
+
                         let gold ={
                             "id":"gold",
                             "symbol":"GOLD",
@@ -188,6 +202,7 @@ const cmcModule = {
 
                         currency.push(gold)
 
+                    
                         return currency
 
                     } catch (err) {
