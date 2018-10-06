@@ -67,7 +67,8 @@ const calcModule = {
                             "name": "Arg",
                             "type": "fiat",
                             "price_bs": Number((1 / ars_max) * dtInfo.USD.dolartoday),
-                            "price_usd": ars_max
+                            "price_free": argUsd.libre,
+                            "price_blue": argUsd.blue
                         }
                         return arg;
 
