@@ -42,14 +42,41 @@ const calcModule = {
                     try {
                         let dtInfo = await $today.getToday()
                         let id = await request.params.id
-                        let fiat = (String(id).toLowerCase()=="dollar")?dtInfo.USD:dtInfo.EUR
+                        let fiat = (String(id).toLowerCase() == "dollar") ? dtInfo.USD : dtInfo.EUR
                         return fiat
 
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)
                     }
                 }
+            },
+            {
+                method: 'get',
+                path: conf.basePath + "/arsinfo",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+                    try {
+                        let argUsd = await $today.getPesoArg();
+                        let dtInfo = await $today.getToday()
+                        let ars_max = (argUsd.libre > argUsd.blue) ? argUsd.libre : argUsd.blue;
+                        let arg = {
+                            "id": "arg",
+                            "symbol": "ARS",
+                            "name": "Arg",
+                            "type": "fiat",
+                            "price_bs": Number((1 / ars_max) * dtInfo.USD.dolartoday),
+                            "price_usd": ars_max
+                        }
+                        return arg;
+
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
+                }
             }
+
         ])
 
     },
