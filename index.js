@@ -16,6 +16,7 @@ const manifest = {
             require("./api/Users/UserModule"),
             require("./api/Crypto/CmCModule"),
             require("./api/Calc/CalcModule"),
+            require("./api/Localbtc/LocalbtcModule"),
         ],
         options: {
             once: true
