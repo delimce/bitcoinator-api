@@ -10,13 +10,13 @@ const localbtcModule = {
         server.route([
             {
                 method: 'get',
-                path: conf.basePath + "/salesByCurrency/{id}",
+                path: conf.basePath + "/sellByCurrency/{cur}",
                 config: {
                     auth: false
                 },
                 handler: async (request, h) => {
                     try {
-                         let resp = await localbtc.getSellByCurrency(request.params.id)
+                         let resp = await localbtc.getSellByCurrency(request.params.cur)
                          return resp
 
                     } catch (err) {
@@ -25,7 +25,25 @@ const localbtcModule = {
 
                 }
             },
-        ])
+            {
+                method: 'get',
+                path: conf.basePath + "/buyByCurrency/{cur}/{local}",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+                    try {
+                         let resp = await localbtc.getBuyByCurrencyLocation(request.params.cur,request.params.local)
+                         return resp
+
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
+
+                }
+            }
+        ]
+        )
     },
     name: 'localbtcModule',
     version: '1.0.0',
