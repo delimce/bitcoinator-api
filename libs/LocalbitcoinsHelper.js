@@ -17,12 +17,13 @@ const getRefactObject = function (localBtc) {
         if (res.data.visible) {
             let local = {}
             local.profile = res.data.profile;
+            local.type = res.data.trade_type;
             local.bank = res.data.bank_name;
             local.msg = res.data.msg;
             local.min = (res.data.limit_to_fiat_amounts) ? Number(res.data.limit_to_fiat_amounts) : Number(res.data.min_amount);
             local.max = (res.data.max_amount_available) ? Number(res.data.max_amount_available) : Number(res.data.max_amount);
             local.price = res.data.temp_price,
-            local.location = res.data.location_string;
+                local.location = res.data.location_string;
             local.country = res.data.countrycode;
             local.url = res.actions.public_view;
             resp.results.push(local)
@@ -32,21 +33,12 @@ const getRefactObject = function (localBtc) {
     return resp;
 }
 
-exports.getSellByCurrency = async function (currency) {
-
+exports.getTradingPostsByCurrency = async function (op, currency, page) {
     let cur = String(currency);
-    let localbtc = await requestify.get('https://localbitcoins.com/sell-bitcoins-online/' + cur.toUpperCase() + '/.json');
+    let current = (page > 1 && page != undefined) ? '?page=' + Number(page) : '';
+    let trade = (op.toLowerCase() == 'sell') ? 'sell' : 'buy';
+    let localbtc = await requestify.get('https://localbitcoins.com/' + trade + '-bitcoins-online/' + cur.toUpperCase() + '/.json' + current);
     let data = localbtc.getBody();
     let resp = getRefactObject(data);
     return resp;
-}
-
-exports.getBuyByCurrencyLocation = async function (currency) {
-
-    let cur = String(currency);
-    let localbtc = await requestify.get('https://localbitcoins.com/buy-bitcoins-online/' + cur.toUpperCase() + '/.json');
-    let data = localbtc.getBody();
-    let resp = getRefactObject(data);
-    return resp;
-
 }

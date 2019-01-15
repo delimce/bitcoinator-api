@@ -10,14 +10,14 @@ const localbtcModule = {
         server.route([
             {
                 method: 'put',
-                path: conf.basePath + "/sellByCurrency/{cur}",
+                path: conf.basePath + "/tradingPosts/currency/{cur}",
                 config: {
                     auth: false
                 },
                 handler: async (request, h) => {
                     try {
                         let data = request.payload;   // <-- this is the important line
-                        let resp = await localbtc.getSellByCurrency(request.params.cur)
+                        let resp = await localbtc.getTradingPostsByCurrency(data.type,request.params.cur, data.page)
 
                         let final = _.filter(resp.results, function (post) {
                             return post.country == data.location.toUpperCase()
@@ -27,23 +27,6 @@ const localbtcModule = {
                         });
 
                         return final
-
-                    } catch (err) {
-                        return Boom.badImplementation('Failed to get....', err)
-                    }
-
-                }
-            },
-            {
-                method: 'get',
-                path: conf.basePath + "/buyByCurrency/{cur}",
-                config: {
-                    auth: false
-                },
-                handler: async (request, h) => {
-                    try {
-                        let resp = await localbtc.getBuyByCurrencyLocation(request.params.cur)
-                        return resp
 
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)
