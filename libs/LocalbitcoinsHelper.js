@@ -41,10 +41,9 @@ exports.getSellByCurrency = async function (currency) {
     return resp;
 }
 
-exports.getBuyByCurrencyLocation = async function (currency, location) {
+exports.getBuyByCurrencyLocation = async function (currency) {
 
     let cur = String(currency);
-    let local = String(location);
     let localbtc = await requestify.get('https://localbitcoins.com/buy-bitcoins-online/' + cur.toUpperCase() + '/.json');
     let data = localbtc.getBody();
     let resp = getRefactObject(data);
