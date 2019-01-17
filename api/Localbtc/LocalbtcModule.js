@@ -48,10 +48,15 @@ const localbtcModule = {
 
                         let final = _.filter(resp.results, function (post) {
                             return post.currency == data.currency.toUpperCase()
-                                && (_.includes(post.bank.toLowerCase(), data.bank.toLowerCase())
-                                    || _.includes(post.msg.toLowerCase(), data.bank.toLowerCase()))
                                 && (data.amount >= post.min && data.amount <= post.max)
                         });
+
+                        if (data.bank != undefined) {
+                            final = _.filter(final, function (post) {
+                                return (_.includes(post.bank.toLowerCase(), data.bank.toLowerCase())
+                                    || _.includes(post.msg.toLowerCase(), data.bank.toLowerCase()))
+                            });
+                        }
 
                         return final
 
@@ -70,7 +75,7 @@ const localbtcModule = {
                 handler: async (request, h) => {
                     try {
 
-                       return conf.countries
+                        return conf.countries
 
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)
