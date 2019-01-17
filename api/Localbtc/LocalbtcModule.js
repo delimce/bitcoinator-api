@@ -17,7 +17,7 @@ const localbtcModule = {
                 handler: async (request, h) => {
                     try {
                         let data = request.payload;   // <-- this is the important line
-                        let resp = await localbtc.getTradingPostsByCurrency(data.type,request.params.cur, data.page)
+                        let resp = await localbtc.getTradingPostsByCurrency(data.type, request.params.cur, data.page)
 
                         let final = _.filter(resp.results, function (post) {
                             return post.country == data.location.toUpperCase()
@@ -32,6 +32,49 @@ const localbtcModule = {
                         return Boom.badImplementation('Failed to get....', err)
                     }
 
+                }
+            },
+            {
+                method: 'put',
+                path: conf.basePath + "/tradingPosts/location/{code}",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+                    try {
+                        let data = request.payload;   // <-- this is the important line
+                        let country = _.find(conf.countries, function (o) { return o.cod == String(request.params.code) });
+                        let resp = await localbtc.getTradingPostsByLocation(data.type, request.params.code, country.name, data.page)
+
+                        let final = _.filter(resp.results, function (post) {
+                            return post.currency == data.currency.toUpperCase()
+                                && (_.includes(post.bank.toLowerCase(), data.bank.toLowerCase())
+                                    || _.includes(post.msg.toLowerCase(), data.bank.toLowerCase()))
+                                && (data.amount >= post.min && data.amount <= post.max)
+                        });
+
+                        return final
+
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
+
+                }
+            },
+            {
+                method: 'get',
+                path: conf.basePath + "/countries",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+                    try {
+
+                       return conf.countries
+
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
                 }
             }
         ]

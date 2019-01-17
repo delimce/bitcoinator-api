@@ -1,4 +1,30 @@
 {
-    "basePath":"/localbtc",
-    "auth":false
+    "basePath": "/localbtc",
+    "auth": false,
+    "countries": [
+        {
+            "cod": "ve",
+            "name": "Venezuela"
+        },
+        {
+            "cod": "pa",
+            "name": "Panama"
+        },
+        {
+            "cod": "es",
+            "name": "Spain"
+        },
+        {
+            "cod": "ar",
+            "name": "Argentina"
+        },
+        {
+            "cod": "us",
+            "name": "united-states"
+        },
+        {
+            "cod": "co",
+            "name": "Colombia"
+        }
+    ]
 }
