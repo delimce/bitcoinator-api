@@ -23,8 +23,8 @@ const getRefactObject = function (localBtc) {
             local.currency = res.data.currency;
             local.min = (res.data.limit_to_fiat_amounts) ? Number(res.data.limit_to_fiat_amounts) : Number(res.data.min_amount);
             local.max = (res.data.max_amount_available) ? Number(res.data.max_amount_available) : Number(res.data.max_amount);
-            local.price = res.data.temp_price,
-                local.location = res.data.location_string;
+            local.price = parseFloat(res.data.temp_price),
+            local.location = res.data.location_string;
             local.country = res.data.countrycode;
             local.url = res.actions.public_view;
             resp.results.push(local)
