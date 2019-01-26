@@ -51,7 +51,7 @@ const localbtcModule = {
                                 && (data.amount >= post.min && data.amount <= post.max)
                         });
 
-                        if (data.bank != undefined) {
+                        if (data.bank != undefined && !_.isEmpty(data.bank)) {
                             final = _.filter(final, function (post) {
                                 return (_.includes(post.bank.toLowerCase(), data.bank.toLowerCase())
                                     || _.includes(post.msg.toLowerCase(), data.bank.toLowerCase()))
