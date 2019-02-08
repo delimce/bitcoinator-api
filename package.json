@@ -35,7 +35,7 @@
     "inert": "~5.0.1",
     "joi": "~13.0.2",
     "jsonwebtoken": "^7.4.1",
-    "lodash": "^4.17.10",
+    "lodash": "~>4.17.11",
     "moment-timezone": "^0.5.16",
     "mysql2": "^1.5.3",
     "nodemailer": "^4.6.4",
