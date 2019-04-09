@@ -27,6 +27,7 @@
     "base64-img": "^1.0.4",
     "bcrypt": "^3.0.0",
     "boom": "^7.2.0",
+    "catbox-disk": "^3.0.2",
     "extend": ">=3.0.2",
     "glue": "^6.0.0",
     "handlebars": "^4.1.1",
