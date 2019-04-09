@@ -5,9 +5,6 @@ const Disk = require('catbox-disk');
 const myServer = require("./config/server.json").dev; ///parameters for server config
 
 const manifest = {
-<<<<<<< HEAD
-    server: myServer.prod,
-=======
     server: {
         "host": myServer.host,
         "port": myServer.port,
@@ -27,7 +24,6 @@ const manifest = {
             }),
         }],
     },
->>>>>>> 7436cfb1097e001854f39d6d0642e38f7a14dfdf
     register: {
         plugins: [
             "inert",
@@ -86,6 +82,3 @@ const startServer = async function () {
 };
 
 startServer();
-
-
-
