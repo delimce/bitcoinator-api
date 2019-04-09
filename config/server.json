@@ -2,7 +2,7 @@
     "dev": {
         "host": "localhost",
         "port": 4000,
-        "cachePath":"/home/ledelima/Documents/projects"
+        "cachePath":"/development/cache"
     },
     "qa": {
         "host": "localhost",
@@ -12,6 +12,6 @@
     "prod": {
         "host": "45.32.214.171",
         "port": 8082,
-        "cachePath":"/home/ledelima/Documents/projects"
+        "cachePath":"/home/delimce/nodeserver/cache"
     }
 }
