@@ -1,11 +1,33 @@
 'use strict';
 
-
 const Glue = require('glue');
-const myServer = require("./config/server.json"); ///parameters for server config
+const Disk = require('catbox-disk');
+const myServer = require("./config/server.json").dev; ///parameters for server config
 
 const manifest = {
+<<<<<<< HEAD
     server: myServer.prod,
+=======
+    server: {
+        "host": myServer.host,
+        "port": myServer.port,
+        "routes": {
+            "cors": {
+                "origin": [
+                    "*"
+                ]
+            }
+        },
+        cache: [{
+            name: 'diskCache',
+            engine: new Disk({
+                cachePath: myServer.cachePath,
+                cleanEvery: 300000, //5 minutes
+                partition: 'cache'
+            }),
+        }],
+    },
+>>>>>>> 7436cfb1097e001854f39d6d0642e38f7a14dfdf
     register: {
         plugins: [
             "inert",
@@ -50,7 +72,7 @@ const startServer = async function () {
         process.on('SIGINT', function () {
             console.log('stopping hapi server')
 
-            server.stop({timeout: 10000}).then(function (err) {
+            server.stop({ timeout: 10000 }).then(function (err) {
                 console.log('hapi server stopped')
                 process.exit((err) ? 1 : 0)
             })
