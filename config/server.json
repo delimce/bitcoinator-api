@@ -1,21 +1,17 @@
 {
     "dev": {
         "host": "localhost",
-        "port": 5000,
-        "routes": {
-            "cors": {
-                "origin": [
-                    "*"
-                ]
-            }
-        }
+        "port": 4000,
+        "cachePath":"/home/ledelima/Documents/projects"
     },
     "qa": {
         "host": "localhost",
-        "port": 80
+        "port": 80,
+        "cachePath":"/home/ledelima/Documents/projects"
     },
     "prod": {
         "host": "45.32.214.171",
-        "port": 8082
+        "port": 8082,
+        "cachePath":"/home/ledelima/Documents/projects"
     }
 }
