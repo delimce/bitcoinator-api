@@ -30,8 +30,6 @@ const manifest = {
             "vision",
             "./api/my_module",
             "./filters/custom",
-            require("./filters/jwt_bundle"),
-            require("./api/Users/UserModule"),
             require("./api/Crypto/CmCModule"),
             require("./api/Calc/CalcModule"),
             require("./api/Localbtc/LocalbtcModule"),
