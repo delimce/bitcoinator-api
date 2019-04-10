@@ -24,3 +24,4 @@ npm-debug.log
 setup.data
 setup.log
 config/db.json
+package-lock.json
