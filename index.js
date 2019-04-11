@@ -2,7 +2,7 @@
 
 const Glue = require('glue');
 const Disk = require('catbox-disk');
-const myServer = require("./config/server.json").prod; ///parameters for server config
+const myServer = require("./config/server.json").dev; ///parameters for server config
 
 const manifest = {
     server: {

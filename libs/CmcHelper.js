@@ -22,13 +22,11 @@ exports.getById = async function (coin) {
 
 }
 
-exports.findCoins = async function (coins) {
-
-    let coinMarketCap = await requestify.get('https://api.coinmarketcap.com/v1/ticker/');
+exports.findCoins = async function (coins, coinMarketCap) {
 
     let newCoins = [];
 
-    _.forEach(coinMarketCap.getBody(), function (coin) {
+   _.forEach(coinMarketCap, function (coin) {
         if (_.includes(coins, coin.symbol)) {
             let newCoin = {}
             newCoin.id = coin.id;

@@ -15,6 +15,58 @@ const cmcModule = {
     register: async (server, options) => {
         // add functionality -> we’ll do that in the section below
 
+
+        /**
+         * CACHE SERVICE FUNCTIONS FOR CMC ENDPOINTS
+         * all functions right here:
+         */
+
+        /**
+         * CMC all assets
+         */
+        const assets = server.cache({
+            cache: 'diskCache',
+            expiresIn: 5 * 60 * 1000,
+            segment: 'cmc',
+            generateFunc: async (id) => {
+                return await cmc.getAll()
+            },
+            generateTimeout: 2000
+        });
+
+        /**
+         * DTODAY values
+         */
+        const dToday = server.cache({
+            cache: 'diskCache',
+            expiresIn: 60 * 60 * 1000,
+            segment: 'dtoday',
+            generateFunc: async (id) => {
+                return await dtoday.getToday()
+            },
+            generateTimeout: 2000
+        });
+
+
+        /**
+         * ARG peso values
+         */
+        const ars = server.cache({
+            cache: 'diskCache',
+            expiresIn: 60 * 60 * 1000,
+            segment: 'arg',
+            generateFunc: async (id) => {
+                return await dtoday.getPesoArg()
+            },
+            generateTimeout: 2000
+        });
+
+
+        /**
+         * END OF CACHE SERVICES FUNCTIONS
+         */
+
+
         server.route([
             {
                 method: 'get',
@@ -25,9 +77,7 @@ const cmcModule = {
                 handler: async (request, h) => {
 
                     try {
-
-                        let coinMarketCap = cmc.getAll()
-                        return coinMarketCap
+                        return assets.get("test")
 
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)
@@ -66,7 +116,7 @@ const cmcModule = {
 
                     try {
 
-                        let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH', 'BTG','ZEC']
+                        let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH', 'BTG', 'ZEC']
                         let coinMarketCap = await cmc.findCoins(coins)
 
                         let currency = []
@@ -78,9 +128,9 @@ const cmcModule = {
                             newCoin.id = coin.id;
                             newCoin.symbol = coin.symbol;
                             newCoin.price_usd = coin.price_usd;
-                            newCoin.percent4rent =coin.percent4rent;
+                            newCoin.percent4rent = coin.percent4rent;
                             newCoin.profit = coin.profit;
-                            newCoin.image = base64Img.base64Sync('./assets/images/svg/'+newCoin.symbol.toLowerCase()+".svg");
+                            newCoin.image = base64Img.base64Sync('./assets/images/svg/' + newCoin.symbol.toLowerCase() + ".svg");
 
                             currency.push(newCoin)
 
@@ -131,11 +181,12 @@ const cmcModule = {
                     try {
 
                         let coins = request.payload   // <-- crypto coin list
-                        let coinMarketCap = await cmc.findCoins(coins)
-                        let dolartoday = await dtoday.getToday()
+                        let crypto = await assets.get("all")
+                        let coinMarketCap = await cmc.findCoins(coins,crypto);
+                        let dolartoday = await dToday.get("all")
                         let price_gold_gram = await dtoday.goldPriceGram(dolartoday.GOLD.rate)
-                        let argUsd = await dtoday.getPesoArg()
-                        let ars_max = (argUsd.libre>argUsd.blue)?argUsd.libre:argUsd.blue;
+                        let argUsd = await ars.get("all")
+                        let ars_max = (argUsd.libre > argUsd.blue) ? argUsd.libre : argUsd.blue;
 
 
                         let currency = []
@@ -143,15 +194,15 @@ const cmcModule = {
                         ////cmc data
                         _.forEach(coinMarketCap, function (coin) {
 
-                                let newCoin = {}
-                                newCoin.id = coin.id;
-                                newCoin.symbol = coin.symbol;
-                                newCoin.type = "crypto",
+                            let newCoin = {}
+                            newCoin.id = coin.id;
+                            newCoin.symbol = coin.symbol;
+                            newCoin.type = "crypto",
                                 newCoin.price_btc = coin.price_btc;
-                                newCoin.price_usd = coin.price_usd;
-                                newCoin.percent4rent =coin.percent4rent;
-                                newCoin.profit = coin.profit;
-                                newCoin.image = base64Img.base64Sync('./assets/images/svg/'+newCoin.symbol.toLowerCase()+".svg");
+                            newCoin.price_usd = coin.price_usd;
+                            newCoin.percent4rent = coin.percent4rent;
+                            newCoin.profit = coin.profit;
+                            newCoin.image = base64Img.base64Sync('./assets/images/svg/' + newCoin.symbol.toLowerCase() + ".svg");
 
                             currency.push(newCoin)
 
@@ -159,49 +210,49 @@ const cmcModule = {
 
 
                         ///dolartoday data
-                        let dollar ={
-                            "id":"dollar",
-                            "symbol":"USD",
-                            "type":"fiat",
-                            "price_bs":Number(dolartoday.USD.dolartoday),
-                            "price_usd":1
+                        let dollar = {
+                            "id": "dollar",
+                            "symbol": "USD",
+                            "type": "fiat",
+                            "price_bs": Number(dolartoday.USD.dolartoday),
+                            "price_usd": 1
                         }
 
                         currency.push(dollar)
 
-                        let euro ={
-                            "id":"euro",
-                            "symbol":"EUR",
-                            "type":"fiat",
-                            "price_bs":Number(dolartoday.EUR.dolartoday),
-                            "price_usd":Number(dolartoday.EURUSD.rate)
-                           
+                        let euro = {
+                            "id": "euro",
+                            "symbol": "EUR",
+                            "type": "fiat",
+                            "price_bs": Number(dolartoday.EUR.dolartoday),
+                            "price_usd": Number(dolartoday.EURUSD.rate)
+
                         }
 
                         currency.push(euro)
 
 
-                        let arg ={
-                            "id":"arg",
-                            "symbol":"ARS",
-                            "type":"fiat",
-                            "price_bs":Number((1/ars_max)*dolartoday.USD.dolartoday),
-                            "price_usd":Number(1/ars_max)
+                        let arg = {
+                            "id": "arg",
+                            "symbol": "ARS",
+                            "type": "fiat",
+                            "price_bs": Number((1 / ars_max) * dolartoday.USD.dolartoday),
+                            "price_usd": Number(1 / ars_max)
                         }
 
                         currency.push(arg)
 
-                        let gold ={
-                            "id":"gold",
-                            "symbol":"GOLD",
-                            "type":"commodity",
-                            "price_bs":Number(dolartoday.USD.dolartoday*price_gold_gram),
-                            "price_usd":Number(price_gold_gram)
+                        let gold = {
+                            "id": "gold",
+                            "symbol": "GOLD",
+                            "type": "commodity",
+                            "price_bs": Number(dolartoday.USD.dolartoday * price_gold_gram),
+                            "price_usd": Number(price_gold_gram)
                         }
 
                         currency.push(gold)
 
-                    
+
                         return currency
 
                     } catch (err) {
