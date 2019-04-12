@@ -17,48 +17,61 @@ const cmcModule = {
 
 
         /**
-         * CACHE SERVICE FUNCTIONS FOR CMC ENDPOINTS
+         * CACHE SERVICE FUNCTIONS FOR CMC ENDPOINTS 
          * all functions right here:
          */
 
         /**
          * CMC all assets
          */
-        const assets = server.cache({
-            cache: 'diskCache',
-            expiresIn: 5 * 60 * 1000,
-            segment: 'cmc',
-            generateFunc: async (id) => {
-                return await cmc.getAll()
-            },
-            generateTimeout: 2000
+
+     
+        const assetsAll = function () {
+            return cmc.getAll()
+        };
+        
+        server.method('assetsAll', assetsAll, {
+            cache: {
+                cache: 'diskCache',
+                expiresIn: 5 * 60 * 1000,
+                segment: 'cmc',
+                generateTimeout: 3000
+            }
         });
+
 
         /**
          * DTODAY values
          */
-        const dToday = server.cache({
-            cache: 'diskCache',
-            expiresIn: 60 * 60 * 1000,
-            segment: 'dtoday',
-            generateFunc: async (id) => {
-                return await dtoday.getToday()
-            },
-            generateTimeout: 2000
+        const dtodayAll = function () {
+            return dtoday.getToday()
+        };
+        
+        server.method('dtodayAll', dtodayAll, {
+            cache: {
+                cache: 'diskCache',
+                expiresIn: 60 * 60 * 1000,
+                segment: 'dtoday',
+                generateTimeout: 2000
+            }
         });
 
 
         /**
          * ARG peso values
          */
-        const ars = server.cache({
-            cache: 'diskCache',
-            expiresIn: 60 * 60 * 1000,
-            segment: 'arg',
-            generateFunc: async (id) => {
-                return await dtoday.getPesoArg()
-            },
-            generateTimeout: 2000
+      
+        const ars = function () {
+            return dtoday.getPesoArg()
+        };
+        
+        server.method('ars', ars, {
+            cache: {
+                cache: 'diskCache',
+                expiresIn: 60 * 60 * 1000,
+                segment: 'arg',
+                generateTimeout: 3000
+            }
         });
 
 
@@ -77,7 +90,7 @@ const cmcModule = {
                 handler: async (request, h) => {
 
                     try {
-                        return assets.get("test")
+                        return server.methods.assetsAll()
 
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)
@@ -181,11 +194,11 @@ const cmcModule = {
                     try {
 
                         let coins = request.payload   // <-- crypto coin list
-                        let crypto = await assets.get("all")
-                        let coinMarketCap = await cmc.findCoins(coins,crypto);
-                        let dolartoday = await dToday.get("all")
+                        let crypto = await server.methods.assetsAll()
+                        let coinMarketCap = await cmc.findCoins(coins, crypto);
+                        let dolartoday = await server.methods.dtodayAll()
                         let price_gold_gram = await dtoday.goldPriceGram(dolartoday.GOLD.rate)
-                        let argUsd = await ars.get("all")
+                        let argUsd = await server.methods.ars()
                         let ars_max = (argUsd.libre > argUsd.blue) ? argUsd.libre : argUsd.blue;
 
 
@@ -197,8 +210,8 @@ const cmcModule = {
                             let newCoin = {}
                             newCoin.id = coin.id;
                             newCoin.symbol = coin.symbol;
-                            newCoin.type = "crypto",
-                                newCoin.price_btc = coin.price_btc;
+                            newCoin.type = "crypto";
+                            newCoin.price_btc = coin.price_btc;
                             newCoin.price_usd = coin.price_usd;
                             newCoin.percent4rent = coin.percent4rent;
                             newCoin.profit = coin.profit;
