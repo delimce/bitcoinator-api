@@ -3,7 +3,6 @@ const conf = require("./config.json");
 const Boom = require('boom');
 const Joi = require('joi');
 const _ = require("lodash");
-let $today = require("../../libs/DTodayHelper");
 
 const calcModule = {
 
@@ -22,7 +21,7 @@ const calcModule = {
 
                     try {
 
-                        let dtInfo = $today.getToday()
+                        let dtInfo = await server.methods.dtodayAll()
                         return dtInfo
 
                     } catch (err) {
@@ -40,7 +39,7 @@ const calcModule = {
                 },
                 handler: async (request, h) => {
                     try {
-                        let dtInfo = await $today.getToday()
+                        let dtInfo = await server.methods.dtodayAll()
                         let id = await request.params.id
                         let fiat = (String(id).toLowerCase() == "dollar") ? dtInfo.USD : dtInfo.EUR
                         return fiat
@@ -58,8 +57,8 @@ const calcModule = {
                 },
                 handler: async (request, h) => {
                     try {
-                        let argUsd = await $today.getPesoArg();
-                        let dtInfo = await $today.getToday()
+                        let argUsd = await server.methods.ars()
+                        let dtInfo = await server.methods.dtodayAll()
                         let ars_max = (argUsd.libre > argUsd.blue) ? argUsd.libre : argUsd.blue;
                         let arg = {
                             "id": "arg",
