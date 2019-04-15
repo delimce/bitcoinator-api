@@ -25,7 +25,6 @@ const cmcModule = {
          * CMC all assets
          */
 
-     
         const assetsAll = function () {
             return cmc.getAll()
         };
@@ -35,6 +34,23 @@ const cmcModule = {
                 cache: 'diskCache',
                 expiresIn: 5 * 60 * 1000,
                 segment: 'cmc',
+                generateTimeout: 3000
+            }
+        });
+
+         /**
+         * CMC asset by id
+         */
+
+        const assetDetail = function (id) {
+            return cmc.getById(id)
+        };
+        
+        server.method('assetDetail', assetDetail, {
+            cache: {
+                cache: 'diskCache',
+                expiresIn: 5 * 60 * 1000,
+                segment: 'cmc/detail',
                 generateTimeout: 3000
             }
         });
@@ -69,7 +85,7 @@ const cmcModule = {
             cache: {
                 cache: 'diskCache',
                 expiresIn: 60 * 60 * 1000,
-                segment: 'arg',
+                segment: 'fiat/arg',
                 generateTimeout: 3000
             }
         });
@@ -109,7 +125,7 @@ const cmcModule = {
 
                     try {
                         let id = await request.params.id
-                        let coinMarketCap = cmc.getById(id)
+                        let coinMarketCap = await server.methods.assetDetail(id)
                         return coinMarketCap
 
                     } catch (err) {
