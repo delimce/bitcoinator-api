@@ -28,7 +28,7 @@ const cmcModule = {
         const assetsAll = function () {
             return cmc.getAll()
         };
-        
+
         server.method('assetsAll', assetsAll, {
             cache: {
                 cache: 'diskCache',
@@ -38,14 +38,14 @@ const cmcModule = {
             }
         });
 
-         /**
-         * CMC asset by id
-         */
+        /**
+        * CMC asset by id
+        */
 
         const assetDetail = function (id) {
             return cmc.getById(id)
         };
-        
+
         server.method('assetDetail', assetDetail, {
             cache: {
                 cache: 'diskCache',
@@ -62,7 +62,7 @@ const cmcModule = {
         const dtodayAll = function () {
             return dtoday.getToday()
         };
-        
+
         server.method('dtodayAll', dtodayAll, {
             cache: {
                 cache: 'diskCache',
@@ -76,11 +76,11 @@ const cmcModule = {
         /**
          * ARG peso values
          */
-      
+
         const ars = function () {
             return dtoday.getPesoArg()
         };
-        
+
         server.method('ars', ars, {
             cache: {
                 cache: 'diskCache',
@@ -216,6 +216,7 @@ const cmcModule = {
                         let price_gold_gram = await dtoday.goldPriceGram(dolartoday.GOLD.rate)
                         let argUsd = await server.methods.ars()
                         let ars_max = (argUsd.libre > argUsd.blue) ? argUsd.libre : argUsd.blue;
+                        ars_max = (_.isNull(ars_max)) ? 1 : Number(ars_max);
 
 
                         let currency = []
