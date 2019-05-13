@@ -35,3 +35,11 @@ exports.jwtDecodeObject = function (token) {
 
 }
 
+/**
+ * @return bool
+ */
+exports.isInvalid = function (value) {
+
+    return (_.isNil(value) || _.isEmpty(value))
+}
+

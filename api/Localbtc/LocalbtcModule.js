@@ -74,9 +74,7 @@ const localbtcModule = {
                 },
                 handler: async (request, h) => {
                     try {
-
                         return conf.countries
-
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)
                     }

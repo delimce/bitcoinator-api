@@ -6,15 +6,13 @@ const _ = require("lodash");
 let base64Img = require('base64-img');
 let locale = require("../../libs/i18nHelper");
 let email = require("../../libs/EmailHelper");
-let utils = require("../../libs/UtilsHelper");
-let config = require("../../config/settings.json");
 let cmc = require("../../libs/CmcHelper");
 let dtoday = require("../../libs/DTodayHelper");
+let utils = require("../../libs/UtilsHelper");
 
 const cmcModule = {
     register: async (server, options) => {
         // add functionality -> we’ll do that in the section below
-
 
         /**
          * CACHE SERVICE FUNCTIONS FOR CMC ENDPOINTS 
@@ -32,7 +30,7 @@ const cmcModule = {
         server.method('assetsAll', assetsAll, {
             cache: {
                 cache: 'diskCache',
-                expiresIn: 5 * 60 * 1000,
+                expiresIn: 4 * 60 * 1000,
                 segment: 'cmc',
                 generateTimeout: 3000
             }
@@ -49,7 +47,7 @@ const cmcModule = {
         server.method('assetDetail', assetDetail, {
             cache: {
                 cache: 'diskCache',
-                expiresIn: 5 * 60 * 1000,
+                expiresIn: 4 * 60 * 1000,
                 segment: 'cmc/detail',
                 generateTimeout: 3000
             }
@@ -84,7 +82,7 @@ const cmcModule = {
         server.method('ars', ars, {
             cache: {
                 cache: 'diskCache',
-                expiresIn: 60 * 60 * 1000,
+                expiresIn: 15 * 60 * 1000,
                 segment: 'fiat/arg',
                 generateTimeout: 3000
             }
@@ -150,7 +148,7 @@ const cmcModule = {
 
                         let currency = []
 
-                        ////cmc data
+                        //cmc data
                         _.forEach(coinMarketCap, function (coin) {
 
                             let newCoin = {}
@@ -221,7 +219,7 @@ const cmcModule = {
 
                         let currency = []
 
-                        ////cmc data
+                        //cmc data
                         _.forEach(coinMarketCap, function (coin) {
 
                             let newCoin = {}
@@ -238,8 +236,7 @@ const cmcModule = {
 
                         });
 
-
-                        ///dolartoday data
+                        //dolartoday data
                         let dollar = {
                             "id": "dollar",
                             "symbol": "USD",
@@ -260,7 +257,6 @@ const cmcModule = {
                         }
 
                         currency.push(euro)
-
 
                         let arg = {
                             "id": "arg",

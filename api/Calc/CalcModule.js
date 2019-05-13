@@ -7,7 +7,6 @@ const _ = require("lodash");
 const calcModule = {
 
     register: async (server, options) => {
-        // add functionality -> we’ll do that in the section below
 
         server.route([
 
@@ -20,10 +19,8 @@ const calcModule = {
                 handler: async (request, h) => {
 
                     try {
-
                         let dtInfo = await server.methods.dtodayAll()
                         return dtInfo
-
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)
                     }
@@ -43,7 +40,6 @@ const calcModule = {
                         let id = await request.params.id
                         let fiat = (String(id).toLowerCase() == "dollar") ? dtInfo.USD : dtInfo.EUR
                         return fiat
-
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)
                     }

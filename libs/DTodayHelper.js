@@ -12,7 +12,8 @@ exports.getToday = async function () {
 
 }
 
-///peso arg http://ws.geeklab.com.ar/
+//new:https://www.cronista.com/MercadosOnline/json/getValoresCalculadora.html
+//peso arg http://ws.geeklab.com.ar/
 exports.getPesoArg = async function () {
 
       let url_parg = "http://ws.geeklab.com.ar/dolar/get-dolar-json.php"
