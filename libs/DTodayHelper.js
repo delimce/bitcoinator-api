@@ -12,16 +12,6 @@ exports.getToday = async function () {
 
 }
 
-//new:https://www.cronista.com/MercadosOnline/json/getValoresCalculadora.html
-//peso arg http://ws.geeklab.com.ar/
-exports.getPesoArg = async function () {
-
-      let url_parg = "http://ws.geeklab.com.ar/dolar/get-dolar-json.php"
-      let $arg = await requestify.get(url_parg);
-      return JSON.parse($arg.getBody());
-  
-  }
-
 exports.goldPriceGram = async function (oz_price) {
     let gramxOz = 0.035274;
     return await gramxOz*oz_price

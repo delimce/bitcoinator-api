@@ -8,6 +8,7 @@ let locale = require("../../libs/i18nHelper");
 let email = require("../../libs/EmailHelper");
 let cmc = require("../../libs/CmcHelper");
 let dtoday = require("../../libs/DTodayHelper");
+let cronista = require("../../libs/CronistaHelper");
 let utils = require("../../libs/UtilsHelper");
 
 const cmcModule = {
@@ -76,13 +77,13 @@ const cmcModule = {
          */
 
         const ars = function () {
-            return dtoday.getPesoArg()
+            return cronista.getInfoArg()
         };
 
         server.method('ars', ars, {
             cache: {
                 cache: 'diskCache',
-                expiresIn: 15 * 60 * 1000,
+                expiresIn: 45 * 60 * 1000,
                 segment: 'fiat/arg',
                 generateTimeout: 3000
             }
@@ -213,8 +214,8 @@ const cmcModule = {
                         let dolartoday = await server.methods.dtodayAll()
                         let price_gold_gram = await dtoday.goldPriceGram(dolartoday.GOLD.rate)
                         let argUsd = await server.methods.ars()
-                        let ars_max = (argUsd.libre > argUsd.blue) ? argUsd.libre : argUsd.blue;
-                        ars_max = (_.isNull(ars_max)) ? 1 : Number(ars_max);
+                        let max_arg = await cronista.getArgByUpperPrice(argUsd)
+                        let ars_max = max_arg.Compra
 
 
                         let currency = []
