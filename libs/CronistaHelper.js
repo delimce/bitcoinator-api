@@ -15,11 +15,12 @@ exports.getInfoArg = async function () {
 
 }
 
-
-exports.getArsCurrencies = async function (json) {
+const getArsCurrencies = async function (json) {
    return _.filter(json, function (item) { return _.includes(item.Nombre, 'DÓLAR'); })
 }
 
 exports.getArgByUpperPrice = async function (json) {
-   return _.maxBy(getArsCurrencies(json), function (o) { return o.Compra; });
+   return _.maxBy(await getArsCurrencies(json), function (o) { return o.Compra; });
 }
+
+exports.getArsCurrencies = getArsCurrencies
