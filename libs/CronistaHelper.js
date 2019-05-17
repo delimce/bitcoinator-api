@@ -9,14 +9,17 @@ let _ = require("lodash");
 
 exports.getInfoArg = async function () {
 
-      let url_parg = "https://www.cronista.com/MercadosOnline/json/getValoresCalculadora.html"
-      let $arg = await requestify.post(url_parg);
-      return JSON.parse($arg.getBody());
-  
-  }
+   let url_parg = "https://www.cronista.com/MercadosOnline/json/getValoresCalculadora.html"
+   let $arg = await requestify.post(url_parg);
+   return JSON.parse($arg.getBody());
+
+}
 
 
-exports.getArgByUpperPrice = async function(json){
-   return _.maxBy( _.filter(json, function(item) 
-   { return _.includes(item.Nombre, 'DÓLAR'); }), function(o) { return o.Compra; });
+exports.getArsCurrencies = async function (json) {
+   return _.filter(json, function (item) { return _.includes(item.Nombre, 'DÓLAR'); })
+}
+
+exports.getArgByUpperPrice = async function (json) {
+   return _.maxBy(getArsCurrencies(json), function (o) { return o.Compra; });
 }
