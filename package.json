@@ -1,6 +1,6 @@
 {
   "name": "bitcoinator-api",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "description": "api for bitcoinator network",
   "main": "index.js",
@@ -27,6 +27,7 @@
     "base64-img": "^1.0.4",
     "boom": "^7.3.0",
     "catbox-disk": "^3.0.2",
+    "dotenv": "^8.0.0",
     "extend": ">=3.0.2",
     "glue": "^6.0.0",
     "handlebars": "^4.1.1",

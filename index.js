@@ -2,12 +2,12 @@
 
 const Glue = require('glue');
 const Disk = require('catbox-disk');
-const myServer = require("./config/server.json").dev; ///parameters for server config
+require('dotenv').config()
 
 const manifest = {
     server: {
-        "host": myServer.host,
-        "port": myServer.port,
+        "host": process.env.SERVER_HOST,
+        "port": process.env.SERVER_PORT,
         "routes": {
             "cors": {
                 "origin": [
@@ -18,7 +18,7 @@ const manifest = {
         cache: [{
             name: 'diskCache',
             engine: new Disk({
-                cachePath: myServer.cachePath,
+                cachePath: process.env.SERVER_CACHE,
                 cleanEvery: 300000, //5 minutes
                 partition: 'cache'
             }),
