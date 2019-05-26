@@ -98,7 +98,7 @@ const cmcModule = {
         server.route([
             {
                 method: 'get',
-                path: conf.basePath + "/getCoins",
+                path: conf.basePath + "/coins",
                 config: {
                     auth: false
                 },
@@ -116,7 +116,7 @@ const cmcModule = {
 
             {
                 method: 'get',
-                path: conf.basePath + "/getCoins/{id}",
+                path: conf.basePath + "/coins/{id}",
                 config: {
                     auth: false
                 },
@@ -144,11 +144,11 @@ const cmcModule = {
 
                     try {
 
+                        let crypto = await server.methods.assetsAll()
                         let coins = ['LTC', 'BTC', 'ETH', 'BCH', 'DASH', 'BTG', 'ZEC']
-                        let coinMarketCap = await cmc.findCoins(coins)
+                        let coinMarketCap = await cmc.findCoins(coins, crypto)
 
                         let currency = []
-
                         //cmc data
                         _.forEach(coinMarketCap, function (coin) {
 
@@ -180,7 +180,7 @@ const cmcModule = {
 
             {
                 method: 'get',
-                path: conf.basePath + "/mCoins",
+                path: conf.basePath + "/coins/short",
                 config: {
                     auth: false
                 },
@@ -188,8 +188,8 @@ const cmcModule = {
 
                     try {
 
-                        let coinMarketCap = await cmc.findCoins()
-                        return coinMarketCap
+                        let crypto = await server.methods.assetsAll()
+                        return cmc.shorInfoCoins(crypto)
 
                     } catch (err) {
                         return Boom.badImplementation('Failed to get....', err)
