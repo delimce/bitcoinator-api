@@ -209,15 +209,16 @@ const cmcModule = {
                     try {
 
                         let coins = request.payload   // <-- crypto coin list
-                        let crypto = await server.methods.assetsAll()
-                        let coinMarketCap = await cmc.findCoins(coins, crypto);
-                        let dolartoday = await server.methods.dtodayAll()
+                       
+                        //async call 
+                        const [coinMarketCap, dolartoday, max_arg] = await Promise.all([
+                            cmc.findCoins(coins, await server.methods.assetsAll()), 
+                            server.methods.dtodayAll(),
+                            cronista.getArgByUpperPrice(await server.methods.ars())
+                        ]);
+
                         let price_gold_gram = await dtoday.goldPriceGram(dolartoday.GOLD.rate)
-                        let argUsd = await server.methods.ars()
-                        let max_arg = await cronista.getArgByUpperPrice(argUsd)
                         let ars_max = max_arg.Compra
-
-
                         let currency = []
 
                         //cmc data
