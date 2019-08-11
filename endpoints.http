@@ -14,3 +14,10 @@ GET {{baseUrl}}/cmc/coins/bitcoin HTTP/1.1
 GET {{baseUrl}}/calc/dolartoday HTTP/1.1
 ### dtoday detail api
 GET {{baseUrl}}/calc/dolartoday/euro HTTP/1.1
+### localbitcoins api
+PUT {{baseUrl}}/localbtc/tradingPosts/currency/usd
+content-type: application/json
+
+{"type":"buy","location":"pa","page":1,"amount":100,"bank":""}
+### testing original localbitcoins endpoints
+GET https://localbitcoins.com/buy-bitcoins-online/es/spain/.json?page=1
