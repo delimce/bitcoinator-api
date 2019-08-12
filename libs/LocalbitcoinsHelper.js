@@ -4,19 +4,26 @@ let requestify = require("requestify"); ///resource for execute vendor services
 let _ = require("lodash");
 const date = require('date-and-time');
 
-const getOnlineStatus = function(datetime) {
-  let now =  new Date();
+const getStatusLabel = function (minutes) {
+
+  let status = 'OFFLINE'
+  if (minutes >= 0 && minutes < 17) {
+    status = 'ONLINE'
+  } else if (minutes >= 17 && minutes < 223) {
+    status = 'AWAY'
+  }
+  return status
+
+}
+
+const getOnlineStatus = function (datetime) {
+  let now = new Date();
   let postDate = new Date(datetime)
-  let result = date.subtract(now, postDate).toMinutes()
-
-  //ONLINE >=0 <=16
-  //AWAY >=17 <=200
-  //OFFLINE > 200
-
-  return result
+  let mins = date.subtract(now, postDate).toMinutes()
+  return getStatusLabel(mins)
 };
 
-const getRefactObject = function(localBtc) {
+const getRefactObject = function (localBtc) {
   let data = localBtc;
   let resp = {};
   resp.pagination = data.pagination;
@@ -25,7 +32,7 @@ const getRefactObject = function(localBtc) {
   let list = [];
   if (Number(data.data.ad_count) > 0) list = data.data.ad_list;
 
-  _.forEach(list, function(res) {
+  _.forEach(list, function (res) {
     if (res.data.visible) {
       let local = {};
       local.profile = res.data.profile;
@@ -51,24 +58,24 @@ const getRefactObject = function(localBtc) {
   return resp;
 };
 
-exports.getTradingPostsByCurrency = async function(op, currency, page) {
+exports.getTradingPostsByCurrency = async function (op, currency, page) {
   let cur = String(currency);
   let current = page > 1 && page != undefined ? "?page=" + Number(page) : "";
   let trade = op.toLowerCase() == "sell" ? "sell" : "buy";
   let localbtc = await requestify.get(
     "https://localbitcoins.com/" +
-      trade +
-      "-bitcoins-online/" +
-      cur.toUpperCase() +
-      "/.json" +
-      current
+    trade +
+    "-bitcoins-online/" +
+    cur.toUpperCase() +
+    "/.json" +
+    current
   );
   let data = localbtc.getBody();
   let resp = getRefactObject(data);
   return resp;
 };
 
-exports.getTradingPostsByLocation = async function(
+exports.getTradingPostsByLocation = async function (
   op,
   location,
   country,
@@ -80,13 +87,13 @@ exports.getTradingPostsByLocation = async function(
   let trade = op.toLowerCase() == "sell" ? "sell" : "buy";
   let localbtc = await requestify.get(
     "https://localbitcoins.com/" +
-      trade +
-      "-bitcoins-online/" +
-      local.toLowerCase() +
-      "/" +
-      name.toLowerCase() +
-      "/.json" +
-      current
+    trade +
+    "-bitcoins-online/" +
+    local.toLowerCase() +
+    "/" +
+    name.toLowerCase() +
+    "/.json" +
+    current
   );
   let data = localbtc.getBody();
   let resp = getRefactObject(data);
