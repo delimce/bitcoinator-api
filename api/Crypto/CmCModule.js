@@ -23,7 +23,7 @@ const cmcModule = {
      * CMC all assets
      */
 
-    const assetsAll = function() {
+    const assetsAll = function () {
       return cmc.getAll();
     };
 
@@ -40,7 +40,7 @@ const cmcModule = {
      * CMC asset by id
      */
 
-    const assetDetail = function(id) {
+    const assetDetail = function (id) {
       return cmc.getById(id);
     };
 
@@ -56,7 +56,7 @@ const cmcModule = {
     /**
      * DTODAY values
      */
-    const dtodayAll = function() {
+    const dtodayAll = function () {
       return dtoday.getToday();
     };
 
@@ -73,7 +73,7 @@ const cmcModule = {
      * ARG peso values
      */
 
-    const ars = function() {
+    const ars = function () {
       return cronista.getInfoArg();
     };
 
@@ -137,7 +137,7 @@ const cmcModule = {
 
             let currency = [];
             //cmc data
-            _.forEach(coinMarketCap, function(coin) {
+            _.forEach(coinMarketCap, function (coin) {
               let newCoin = {};
               newCoin.id = coin.id;
               newCoin.symbol = coin.symbol;
@@ -199,9 +199,10 @@ const cmcModule = {
             let currency = [];
 
             //cmc data
-            _.forEach(coinMarketCap, function(coin) {
+            _.forEach(coinMarketCap, function (coin) {
               let newCoin = {};
               newCoin.id = coin.id;
+              newCoin.cmc_id = coin.cmc_id;
               newCoin.symbol = coin.symbol;
               newCoin.type = "crypto";
               newCoin.price_btc = coin.price_btc;

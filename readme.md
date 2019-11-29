@@ -11,6 +11,9 @@ mkdir /path/to/caching/files
 mv .env.example .env
 npm start
  ```
+#IMPORTANT! you'll need setting coinmarketcap api key var, (CMC_API_KEY) to use endpoints for cryptocurrency information.
+More info in: https://coinmarketcap.com/api/documentation/v1/#section/Quick-Start-Guide
+
 ## Api documentation
 
 #### get all coinmarketcap assets
