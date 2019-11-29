@@ -1,19 +1,22 @@
 'use strict';
 
-let requestify = require('requestify'); ///resource for execute vendor services
 let _ = require("lodash");
+const rp = require('request-promise');
 
 exports.getToday = async function () {
 
-  //  let url_dtoday = "http://45.32.214.171:8082/calc/dolartoday"
-    let url_dtoday = "https://s3.amazonaws.com/dolartoday/data.json"
-    let $today = await requestify.get(url_dtoday);
-    return $today.getBody()
+  let url_dtoday = "https://s3.amazonaws.com/dolartoday/data.json"
+  return await rp({
+    method: 'GET',
+    uri: url_dtoday,
+    json: true,
+    gzip: true
+  })
 
 }
 
 exports.goldPriceGram = async function (oz_price) {
-    let gramxOz = 0.035274;
-    return await gramxOz*oz_price
+  let gramxOz = 0.035274;
+  return gramxOz * oz_price
 
 }

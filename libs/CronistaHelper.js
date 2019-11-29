@@ -1,18 +1,20 @@
 'use strict';
 
-let requestify = require('requestify'); ///resource for execute vendor services
 let _ = require("lodash");
+const rp = require('request-promise');
 
 
 //new:https://www.cronista.com/MercadosOnline/json/getValoresCalculadora.html
 //old:http://ws.geeklab.com.ar/dolar/get-dolar-json.php 
 
 exports.getInfoArg = async function () {
-
    let url_parg = "https://www.cronista.com/MercadosOnline/json/getValoresCalculadora.html"
-   let $arg = await requestify.post(url_parg);
-   return JSON.parse($arg.getBody());
-
+   return await rp({
+      method: 'POST',
+      uri: url_parg,
+      json: true,
+      gzip: true
+    })
 }
 
 const getArsCurrencies = async function (json) {
