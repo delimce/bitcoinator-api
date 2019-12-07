@@ -23,7 +23,7 @@ const cmcModule = {
      * CMC all assets
      */
 
-    const assetsAll = function () {
+    const assetsAll = function() {
       return cmc.getAll();
     };
 
@@ -40,7 +40,7 @@ const cmcModule = {
      * CMC asset by id
      */
 
-    const assetDetail = function (id) {
+    const assetDetail = function(id) {
       return cmc.getById(id);
     };
 
@@ -56,7 +56,7 @@ const cmcModule = {
     /**
      * DTODAY values
      */
-    const dtodayAll = function () {
+    const dtodayAll = function() {
       return dtoday.getToday();
     };
 
@@ -73,7 +73,7 @@ const cmcModule = {
      * ARG peso values
      */
 
-    const ars = function () {
+    const ars = function() {
       return cronista.getInfoArg();
     };
 
@@ -134,14 +134,16 @@ const cmcModule = {
             let crypto = await server.methods.assetsAll();
             let coins = ["LTC", "BTC", "ETH", "BCH", "DASH", "BTG", "ZEC"];
             let coinMarketCap = await cmc.findCoins(coins, crypto);
+            let btcCoin = await _.find(coinMarketCap, function(o) { return o.symbol==="BTC"});
 
             let currency = [];
             //cmc data
-            _.forEach(coinMarketCap, function (coin) {
+            _.forEach(coinMarketCap, async function(coin) {
               let newCoin = {};
               newCoin.id = coin.id;
               newCoin.symbol = coin.symbol;
               newCoin.price_usd = coin.price_usd;
+              newCoin.price_btc = await cmc.getQuantityRelBTC(btcCoin,coin);
               newCoin.percent4rent = coin.percent4rent;
               newCoin.profit = coin.profit;
               newCoin.image = utils.getSVGimage(newCoin.symbol.toLowerCase());
@@ -196,16 +198,17 @@ const cmcModule = {
               dolartoday.GOLD.rate
             );
             let ars_max = max_arg.Compra;
+            let btcCoin = await _.find(coinMarketCap, function(o) { return o.symbol==="BTC"});
             let currency = [];
 
             //cmc data
-            _.forEach(coinMarketCap, function (coin) {
+            _.forEach(coinMarketCap, async function(coin) {
               let newCoin = {};
               newCoin.id = coin.id;
               newCoin.cmc_id = coin.cmc_id;
               newCoin.symbol = coin.symbol;
               newCoin.type = "crypto";
-              newCoin.price_btc = coin.price_btc;
+              newCoin.price_btc = await cmc.getQuantityRelBTC(btcCoin,coin);
               newCoin.price_usd = coin.price_usd;
               newCoin.percent4rent = coin.percent4rent;
               newCoin.profit = coin.profit;
