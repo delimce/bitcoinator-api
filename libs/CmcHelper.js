@@ -13,7 +13,7 @@ exports.getAll = async function() {
     uri: urlPath + "cryptocurrency/listings/latest",
     qs: {
       start: "1",
-      limit: "1000",
+      limit: "250",
       convert: "USD"
     },
     headers: {
@@ -30,7 +30,7 @@ exports.getById = async function(id) {
     method: "GET",
     uri: urlPath + "cryptocurrency/quotes/latest",
     qs: {
-      slug: id
+      slug: _.toLower(id)
     },
     headers: {
       "X-CMC_PRO_API_KEY": apiKey
@@ -38,7 +38,12 @@ exports.getById = async function(id) {
     json: true,
     gzip: true
   });
-  return parseCoinDetail(coinMarketCap.data);
+
+  let detail = {}
+  for (let index in coinMarketCap.data) {
+    detail = parseCoinDetail(coinMarketCap.data,index);
+  }
+  return detail;
 };
 
 const parseCoin = function(coin) {
@@ -59,8 +64,15 @@ const parseCoin = function(coin) {
   return newCoin;
 };
 
-const parseCoinDetail = function(data) {
-  let coin = data["1"];
+
+const convertDateToTimestamp = function(dateString){
+  let date = new Date(dateString)
+  return date.getTime()
+
+}
+
+const parseCoinDetail = function(data,index) {
+  let coin = data[index];
   return [
     {
       id: coin.slug,
@@ -71,13 +83,13 @@ const parseCoinDetail = function(data) {
       price_btc: "1.0",
       "24h_volume_usd": coin.quote.USD.volume_24h,
       market_cap_usd: coin.quote.USD.market_cap,
-      available_supply: coin.quote.USD.circulating_supply,
+      available_supply: coin.circulating_supply,
       total_supply: coin.quote.USD.total_supply,
-      max_supply: coin.quote.USD.max_supply,
+      max_supply: coin.max_supply,
       percent_change_1h: coin.quote.USD.percent_change_1h,
       percent_change_24h: coin.quote.USD.percent_change_24h,
       percent_change_7d: coin.quote.USD.percent_change_7d,
-      last_updated: coin.quote.USD.last_updated
+      last_updated: convertDateToTimestamp(coin.quote.USD.last_updated)
     }
   ];
 };
@@ -91,7 +103,7 @@ exports.shorInfoCoins = function(coinMarketCap) {
   return infoCoins;
 };
 
-exports.getQuantityRelBTC = async function(btc, altcoin) {
+exports.getQuantityRelBTC = function(btc, altcoin) {
   let finalPrice =
     altcoin.symbol === "BTC"
       ? 1

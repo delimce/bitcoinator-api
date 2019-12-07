@@ -1,6 +1,6 @@
 {
   "name": "bitcoinator-api",
-  "version": "0.4.0",
+  "version": "0.4.2",
   "private": true,
   "description": "api for bitcoinator network",
   "main": "index.js",

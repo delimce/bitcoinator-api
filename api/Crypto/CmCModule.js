@@ -208,7 +208,7 @@ const cmcModule = {
               newCoin.cmc_id = coin.cmc_id;
               newCoin.symbol = coin.symbol;
               newCoin.type = "crypto";
-              newCoin.price_btc = await cmc.getQuantityRelBTC(btcCoin,coin);
+              newCoin.price_btc = cmc.getQuantityRelBTC(btcCoin,coin);
               newCoin.price_usd = coin.price_usd;
               newCoin.percent4rent = coin.percent4rent;
               newCoin.profit = coin.profit;
@@ -258,7 +258,8 @@ const cmcModule = {
 
             currency.push(gold);
 
-            return currency;
+            return _.orderBy(currency, ['cmc_id','type'], ['asc','desc']);
+
           } catch (err) {
             return Boom.badImplementation("Failed to get....", err);
           }
