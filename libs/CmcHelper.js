@@ -25,7 +25,24 @@ exports.getAll = async function() {
   return coinMarketCap.data;
 };
 
-exports.getById = async function(id) {
+
+exports.getById = async function (coin) {
+  const endPoint = `https://api.coinmarketcap.com/v1/ticker/${coin}/`
+  let coinMarketCap = await rp({
+    method: "GET",
+    uri: endPoint,
+    json: true,
+    gzip: true
+  });
+
+  return coinMarketCap
+
+}
+
+/**
+ * new cmc api function BETA
+ */
+exports.getById2 = async function(id) {
   let coinMarketCap = await rp({
     method: "GET",
     uri: urlPath + "cryptocurrency/quotes/latest",
