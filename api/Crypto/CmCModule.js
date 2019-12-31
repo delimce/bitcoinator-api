@@ -257,8 +257,7 @@ const cmcModule = {
             };
 
             currency.push(gold);
-
-            return _.orderBy(currency, ['cmc_id','type'], ['asc','desc']);
+            return currency;
 
           } catch (err) {
             return Boom.badImplementation("Failed to get....", err);

@@ -25,9 +25,8 @@ exports.getAll = async function() {
   return coinMarketCap.data;
 };
 
-
-exports.getById = async function (coin) {
-  const endPoint = `https://api.coinmarketcap.com/v1/ticker/${coin}/`
+exports.getById = async function(coin) {
+  const endPoint = `https://api.coinmarketcap.com/v1/ticker/${coin}/`;
   let coinMarketCap = await rp({
     method: "GET",
     uri: endPoint,
@@ -35,9 +34,8 @@ exports.getById = async function (coin) {
     gzip: true
   });
 
-  return coinMarketCap
-
-}
+  return coinMarketCap;
+};
 
 /**
  * new cmc api function BETA
@@ -56,9 +54,9 @@ exports.getById2 = async function(id) {
     gzip: true
   });
 
-  let detail = {}
+  let detail = {};
   for (let index in coinMarketCap.data) {
-    detail = parseCoinDetail(coinMarketCap.data,index);
+    detail = parseCoinDetail(coinMarketCap.data, index);
   }
   return detail;
 };
@@ -81,14 +79,12 @@ const parseCoin = function(coin) {
   return newCoin;
 };
 
+const convertDateToTimestamp = function(dateString) {
+  let date = new Date(dateString);
+  return date.getTime();
+};
 
-const convertDateToTimestamp = function(dateString){
-  let date = new Date(dateString)
-  return date.getTime()
-
-}
-
-const parseCoinDetail = function(data,index) {
+const parseCoinDetail = function(data, index) {
   let coin = data[index];
   return [
     {
@@ -129,13 +125,22 @@ exports.getQuantityRelBTC = function(btc, altcoin) {
 };
 
 exports.findCoins = async function(coins, coinMarketCap) {
-  let newCoins = [];
-  _.forEach(coinMarketCap, function(coin) {
-    if (_.includes(coins, coin.symbol)) {
-      let newCoin = parseCoin(coin);
-      newCoins.push(newCoin);
-    }
-  });
-
-  return _.orderBy(newCoins, ["percent4rent"], ["desc"]);
+  return _.orderBy(
+    await coinMarketCap
+      .filter(function(item) {
+        try {
+          if (_.includes(coins, item.symbol)) {
+            return item;
+          }
+        } catch (error) {
+          console.error(error);
+          return false;
+        }
+      })
+      .map(function(item) {
+        return parseCoin(item);
+      }),
+    ["percent4rent"],
+    ["desc"]
+  );
 };
