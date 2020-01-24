@@ -6,11 +6,12 @@ const _ = require("lodash");
 let locale = require("../../libs/i18nHelper");
 let email = require("../../libs/EmailHelper");
 let cmc = require("../../libs/CmcHelper");
+let petro = require("../../libs/PetroHelper");
 let dtoday = require("../../libs/DTodayHelper");
 let cronista = require("../../libs/CronistaHelper");
 let utils = require("../../libs/UtilsHelper");
 
-const cmcModule = {
+const cryptoModule = {
   register: async (server, options) => {
     // add functionality -> we’ll do that in the section below
 
@@ -85,6 +86,26 @@ const cmcModule = {
         generateTimeout: 3000
       }
     });
+
+
+    /**
+     * PETRO values
+     */
+
+    const petroPrice = function() {
+      return petro.getValue()
+    };
+
+    server.method("petro", petroPrice, {
+      cache: {
+        cache: "diskCache",
+        expiresIn: 45 * 60 * 1000,
+        segment: "petro",
+        generateTimeout: 3000
+      }
+    });
+
+
 
     /**
      * END OF CACHE SERVICES FUNCTIONS
@@ -273,4 +294,4 @@ const cmcModule = {
   options: {}
 };
 
-module.exports = cmcModule;
+module.exports = cryptoModule;
