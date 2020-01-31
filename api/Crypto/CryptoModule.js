@@ -112,6 +112,22 @@ const cryptoModule = {
      */
 
     server.route([
+
+      {
+        method: "get",
+        path: conf.basePath + "/petro",
+        config: {
+          auth: false
+        },
+        handler: async (request, h) => {
+          try {
+            return server.methods.petro();
+          } catch (err) {
+            return Boom.badImplementation("Failed to get....", err);
+          }
+        }
+      },
+
       {
         method: "get",
         path: conf.basePath + "/coins",

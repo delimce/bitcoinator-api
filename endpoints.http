@@ -21,3 +21,5 @@ content-type: application/json
 {"type":"sell","location":"ve","page":1,"amount":400000,"bank":""}
 ### testing original localbitcoins endpoints
 GET https://localbitcoins.com/buy-bitcoins-online/es/spain/.json?page=1
+### petro api tester
+GET {{baseUrl}}/cmc/petro HTTP/1.1
