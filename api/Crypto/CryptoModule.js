@@ -6,11 +6,12 @@ const _ = require("lodash");
 let locale = require("../../libs/i18nHelper");
 let email = require("../../libs/EmailHelper");
 let cmc = require("../../libs/CmcHelper");
+let petro = require("../../libs/PetroHelper");
 let dtoday = require("../../libs/DTodayHelper");
 let cronista = require("../../libs/CronistaHelper");
 let utils = require("../../libs/UtilsHelper");
 
-const cmcModule = {
+const cryptoModule = {
   register: async (server, options) => {
     // add functionality -> we’ll do that in the section below
 
@@ -86,11 +87,47 @@ const cmcModule = {
       }
     });
 
+
+    /**
+     * PETRO values
+     */
+
+    const petroPrice = function() {
+      return petro.getValue()
+    };
+
+    server.method("petro", petroPrice, {
+      cache: {
+        cache: "diskCache",
+        expiresIn: 45 * 60 * 1000,
+        segment: "petro",
+        generateTimeout: 3000
+      }
+    });
+
+
+
     /**
      * END OF CACHE SERVICES FUNCTIONS
      */
 
     server.route([
+
+      {
+        method: "get",
+        path: conf.basePath + "/petro",
+        config: {
+          auth: false
+        },
+        handler: async (request, h) => {
+          try {
+            return server.methods.petro();
+          } catch (err) {
+            return Boom.badImplementation("Failed to get....", err);
+          }
+        }
+      },
+
       {
         method: "get",
         path: conf.basePath + "/coins",
@@ -272,4 +309,4 @@ const cmcModule = {
   options: {}
 };
 
-module.exports = cmcModule;
+module.exports = cryptoModule;

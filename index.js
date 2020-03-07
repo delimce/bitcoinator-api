@@ -30,7 +30,7 @@ const manifest = {
             "vision",
             "./api/my_module",
             "./filters/custom",
-            require("./api/Crypto/CmCModule"),
+            require("./api/Crypto/CryptoModule"),
             require("./api/Calc/CalcModule"),
             require("./api/Localbtc/LocalbtcModule"),
         ],
