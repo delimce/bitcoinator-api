@@ -25,7 +25,7 @@ exports.getAll = async function() {
   return coinMarketCap.data;
 };
 
-exports.getById = async function(coin) {
+exports.getById2 = async function(coin) {
   const endPoint = `https://api.coinmarketcap.com/v1/ticker/${coin}/`;
   let coinMarketCap = await rp({
     method: "GET",
@@ -40,7 +40,7 @@ exports.getById = async function(coin) {
 /**
  * new cmc api function BETA
  */
-exports.getById2 = async function(id) {
+exports.getById = async function(id) {
   let coinMarketCap = await rp({
     method: "GET",
     uri: urlPath + "cryptocurrency/quotes/latest",
