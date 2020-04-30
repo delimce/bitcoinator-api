@@ -24,14 +24,14 @@ const cryptoModule = {
      * CMC all assets
      */
 
-    const assetsAll = function() {
+    const assetsAll = function () {
       return cmc.getAll();
     };
 
     server.method("assetsAll", assetsAll, {
       cache: {
         cache: "diskCache",
-        expiresIn: 4 * 60 * 1000,
+        expiresIn: 3 * 60 * 1000,
         segment: "cmc",
         generateTimeout: 3000
       }
@@ -41,14 +41,14 @@ const cryptoModule = {
      * CMC asset by id
      */
 
-    const assetDetail = function(id) {
+    const assetDetail = function (id) {
       return cmc.getById(id);
     };
 
     server.method("assetDetail", assetDetail, {
       cache: {
         cache: "diskCache",
-        expiresIn: 4 * 60 * 1000,
+        expiresIn: 3 * 60 * 1000,
         segment: "cmc/detail",
         generateTimeout: 3000
       }
@@ -57,7 +57,7 @@ const cryptoModule = {
     /**
      * DTODAY values
      */
-    const dtodayAll = function() {
+    const dtodayAll = function () {
       return dtoday.getToday();
     };
 
@@ -74,14 +74,14 @@ const cryptoModule = {
      * ARG peso values
      */
 
-    const ars = function() {
+    const ars = function () {
       return cronista.getInfoArg();
     };
 
     server.method("ars", ars, {
       cache: {
         cache: "diskCache",
-        expiresIn: 45 * 60 * 1000,
+        expiresIn: 60 * 60 * 1000,
         segment: "fiat/arg",
         generateTimeout: 3000
       }
@@ -92,7 +92,7 @@ const cryptoModule = {
      * PETRO values
      */
 
-    const petroPrice = function() {
+    const petroPrice = function () {
       return petro.getValue()
     };
 
@@ -171,16 +171,16 @@ const cryptoModule = {
             let crypto = await server.methods.assetsAll();
             let coins = ["LTC", "BTC", "ETH", "BCH", "DASH", "BTG", "ZEC"];
             let coinMarketCap = await cmc.findCoins(coins, crypto);
-            let btcCoin = await _.find(coinMarketCap, function(o) { return o.symbol==="BTC"});
+            let btcCoin = await _.find(coinMarketCap, function (o) { return o.symbol === "BTC" });
 
             let currency = [];
             //cmc data
-            _.forEach(coinMarketCap, async function(coin) {
+            _.forEach(coinMarketCap, async function (coin) {
               let newCoin = {};
               newCoin.id = coin.id;
               newCoin.symbol = coin.symbol;
               newCoin.price_usd = coin.price_usd;
-              newCoin.price_btc = await cmc.getQuantityRelBTC(btcCoin,coin);
+              newCoin.price_btc = await cmc.getQuantityRelBTC(btcCoin, coin);
               newCoin.percent4rent = coin.percent4rent;
               newCoin.profit = coin.profit;
               newCoin.image = utils.getSVGimage(newCoin.symbol.toLowerCase());
@@ -234,18 +234,19 @@ const cryptoModule = {
             let price_gold_gram = await dtoday.goldPriceGram(
               dolartoday.GOLD.rate
             );
-            let ars_max = max_arg.Compra;
-            let btcCoin = await _.find(coinMarketCap, function(o) { return o.symbol==="BTC"});
+
+            let ars_max = (_.has(max_arg, 'Compra')) ? max_arg.Compra : 1;
+            let btcCoin = await _.find(coinMarketCap, function (o) { return o.symbol === "BTC" });
             let currency = [];
 
             //cmc data
-            _.forEach(coinMarketCap, async function(coin) {
+            _.forEach(coinMarketCap, async function (coin) {
               let newCoin = {};
               newCoin.id = coin.id;
               newCoin.cmc_id = coin.cmc_id;
               newCoin.symbol = coin.symbol;
               newCoin.type = "crypto";
-              newCoin.price_btc = cmc.getQuantityRelBTC(btcCoin,coin);
+              newCoin.price_btc = cmc.getQuantityRelBTC(btcCoin, coin);
               newCoin.price_usd = coin.price_usd;
               newCoin.percent4rent = coin.percent4rent;
               newCoin.profit = coin.profit;

@@ -18,8 +18,10 @@ GET {{baseUrl}}/calc/dolartoday/euro HTTP/1.1
 PUT {{baseUrl}}/localbtc/tradingPosts/currency/ves
 content-type: application/json
 
-{"type":"sell","location":"ve","page":1,"amount":400000,"bank":""}
+{"type":"buy","location":"ve","page":2,"amount":1000000,"bank":""}
 ### testing original localbitcoins endpoints
 GET https://localbitcoins.com/buy-bitcoins-online/es/spain/.json?page=1
 ### petro api tester
 GET {{baseUrl}}/cmc/petro HTTP/1.1
+### ARS Currency
+GET {{baseUrl}}/calc/arsinfo HTTP/1.1

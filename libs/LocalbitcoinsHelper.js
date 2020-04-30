@@ -2,9 +2,9 @@
 
 let _ = require("lodash");
 const date = require("date-and-time");
-const rp = require("request-promise");
+const axios = require('axios');
 
-const getStatusLabel = function(minutes) {
+const getStatusLabel = function (minutes) {
   let status = "OFFLINE";
   if (minutes >= 0 && minutes < 17) {
     status = "ONLINE";
@@ -14,14 +14,14 @@ const getStatusLabel = function(minutes) {
   return status;
 };
 
-const getOnlineStatus = function(datetime) {
+const getOnlineStatus = function (datetime) {
   let now = new Date();
   let postDate = new Date(datetime);
   let mins = date.subtract(now, postDate).toMinutes();
   return getStatusLabel(mins);
 };
 
-const getRefactObject = function(localBtc) {
+const getRefactObject = function (localBtc) {
   let data = localBtc;
   let resp = {};
   resp.pagination = data.pagination;
@@ -30,7 +30,7 @@ const getRefactObject = function(localBtc) {
   let list = [];
   if (Number(data.data.ad_count) > 0) list = data.data.ad_list;
 
-  _.forEach(list, function(res) {
+  _.forEach(list, function (res) {
     if (res.data.visible) {
       let local = {};
       local.profile = res.data.profile;
@@ -56,7 +56,7 @@ const getRefactObject = function(localBtc) {
   return resp;
 };
 
-exports.getTradingPostsByCurrency = async function(op, currency, page) {
+exports.getTradingPostsByCurrency = async function (op, currency, page) {
   let cur = String(currency);
   let current = page > 1 && page != undefined ? "?page=" + Number(page) : "";
   let trade = op.toLowerCase() == "sell" ? "sell" : "buy";
@@ -69,18 +69,17 @@ exports.getTradingPostsByCurrency = async function(op, currency, page) {
     "/.json" +
     current;
 
-  let data = await rp({
-    method: "GET",
-    uri: url_localbtc,
-    json: true,
-    gzip: true
-  });
+  let info = await axios({
+    method: 'get',
+    timeout: 40000,
+    url: url_localbtc
+  })
 
-  let resp = getRefactObject(data);
+  let resp = getRefactObject(info.data);
   return resp;
 };
 
-exports.getTradingPostsByLocation = async function(
+exports.getTradingPostsByLocation = async function (
   op,
   location,
   country,
@@ -101,13 +100,12 @@ exports.getTradingPostsByLocation = async function(
     "/.json" +
     current;
 
-  let data = await rp({
-    method: "GET",
-    uri: url_localbtc,
-    json: true,
-    gzip: true
-  });
+  let info = await axios({
+    method: 'get',
+    timeout: 40000,
+    url: url_localbtc
+  })
 
-  let resp = getRefactObject(data);
+  let resp = getRefactObject(info.data);
   return resp;
 };

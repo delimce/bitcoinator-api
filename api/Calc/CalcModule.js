@@ -50,19 +50,20 @@ const calcModule = {
                 method: 'get',
                 path: conf.basePath + "/arsinfo",
                 config: {
-                    auth: false
+                    auth: false,
                 },
                 handler: async (request, h) => {
                     try {
-                        let argUsd = await server.methods.ars()
-                        let argPricesList = await _.map(await cronista.getArsCurrencies(argUsd), function(item){
-                            let temp = {}
-                            temp.id = String(item.Id)
-                            temp.name = item.Nombre
-                            temp.symbol = 'ARG'
-                            temp.precent = item.VariacionPorcentual
-                            temp.price_sell = item.Venta
-                            temp.price_buy = item.Compra
+                        let argUsd = await cronista.getInfoArg()
+                        console.log(argUsd)
+                        let argPricesList = _.map(await cronista.getArsCurrencies(argUsd), function (item) {
+                            let temp = {};
+                            temp.id = String(item.Id);
+                            temp.name = item.Nombre;
+                            temp.symbol = 'ARG';
+                            temp.precent = item.VariacionPorcentual;
+                            temp.price_sell = item.Venta;
+                            temp.price_buy = item.Compra;
                             return temp;
                         })
                         return argPricesList

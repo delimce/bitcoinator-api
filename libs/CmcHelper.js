@@ -1,67 +1,55 @@
 "use strict";
 
 let _ = require("lodash");
-const rp = require("request-promise");
+const axios = require("axios");
 
 require("dotenv").config();
 let apiKey = process.env.CMC_API_KEY;
 let urlPath = "https://pro-api.coinmarketcap.com/v1/";
 
-exports.getAll = async function() {
-  let coinMarketCap = await rp({
-    method: "GET",
-    uri: urlPath + "cryptocurrency/listings/latest",
-    qs: {
+const axios_rest = axios.create({
+  baseURL: urlPath,
+  timeout: 2000,
+  headers: { "X-CMC_PRO_API_KEY": apiKey }
+});
+
+exports.getAll = async function () {
+  let coinMarketCap = {}
+  try {
+    coinMarketCap = await axios_rest.get('/cryptocurrency/listings/latest', {
       start: "1",
       limit: "250",
-      convert: "USD"
-    },
-    headers: {
-      "X-CMC_PRO_API_KEY": apiKey
-    },
-    json: true,
-    gzip: true
-  });
-  return coinMarketCap.data;
-};
-
-exports.getById2 = async function(coin) {
-  const endPoint = `https://api.coinmarketcap.com/v1/ticker/${coin}/`;
-  let coinMarketCap = await rp({
-    method: "GET",
-    uri: endPoint,
-    json: true,
-    gzip: true
-  });
-
-  return coinMarketCap;
+      convert: "USD",
+      json: true,
+      gzip: true
+    })
+  } catch (error) {
+    console.log(error)
+  } finally {
+    return coinMarketCap.data.data;
+  }
 };
 
 /**
  * new cmc api function BETA
  */
-exports.getById = async function(id) {
-  let coinMarketCap = await rp({
-    method: "GET",
-    uri: urlPath + "cryptocurrency/quotes/latest",
-    qs: {
-      slug: _.toLower(id)
-    },
-    headers: {
-      "X-CMC_PRO_API_KEY": apiKey
-    },
-    json: true,
-    gzip: true
-  });
-
+exports.getById = async function (id) {
+  let coinMarketCap = {}
   let detail = {};
-  for (let index in coinMarketCap.data) {
-    detail = parseCoinDetail(coinMarketCap.data, index);
+  try {
+    coinMarketCap = await axios_rest.get('/cryptocurrency/quotes/latest?slug=' + _.toLower(id))
+  } catch (error) {
+    console.log(error)
+  } finally {
+    for (let index in coinMarketCap.data.data) {
+      detail = parseCoinDetail(coinMarketCap.data.data, index);
+    }
+    return detail;
   }
-  return detail;
+
 };
 
-const parseCoin = function(coin) {
+const parseCoin = function (coin) {
   let newCoin = {};
   newCoin.id = coin.slug;
   newCoin.cmc_id = coin.id;
@@ -79,12 +67,12 @@ const parseCoin = function(coin) {
   return newCoin;
 };
 
-const convertDateToTimestamp = function(dateString) {
+const convertDateToTimestamp = function (dateString) {
   let date = new Date(dateString);
   return date.getTime();
 };
 
-const parseCoinDetail = function(data, index) {
+const parseCoinDetail = function (data, index) {
   let coin = data[index];
   return [
     {
@@ -107,16 +95,16 @@ const parseCoinDetail = function(data, index) {
   ];
 };
 
-exports.shorInfoCoins = function(coinMarketCap) {
+exports.shorInfoCoins = function (coinMarketCap) {
   let infoCoins = [];
-  _.forEach(coinMarketCap, function(coin) {
+  _.forEach(coinMarketCap, function (coin) {
     let newCoin = parseCoin(coin);
     infoCoins.push(newCoin);
   });
   return infoCoins;
 };
 
-exports.getQuantityRelBTC = function(btc, altcoin) {
+exports.getQuantityRelBTC = function (btc, altcoin) {
   let finalPrice =
     altcoin.symbol === "BTC"
       ? 1
@@ -124,10 +112,10 @@ exports.getQuantityRelBTC = function(btc, altcoin) {
   return Number(finalPrice);
 };
 
-exports.findCoins = async function(coins, coinMarketCap) {
+exports.findCoins = async function (coins, coinMarketCap) {
   return _.orderBy(
     await coinMarketCap
-      .filter(function(item) {
+      .filter(function (item) {
         try {
           if (_.includes(coins, item.symbol)) {
             return item;
@@ -137,7 +125,7 @@ exports.findCoins = async function(coins, coinMarketCap) {
           return false;
         }
       })
-      .map(function(item) {
+      .map(function (item) {
         return parseCoin(item);
       }),
     ["percent4rent"],

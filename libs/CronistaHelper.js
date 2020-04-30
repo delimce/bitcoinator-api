@@ -1,20 +1,31 @@
 'use strict';
 
 let _ = require("lodash");
-const rp = require('request-promise');
+const axios = require('axios');
 
 
 //new:https://www.cronista.com/MercadosOnline/json/getValoresCalculadora.html
 //old:http://ws.geeklab.com.ar/dolar/get-dolar-json.php 
 
 exports.getInfoArg = async function () {
-   let url_parg = "https://www.cronista.com/MercadosOnline/json/getValoresCalculadora.html"
-   return await rp({
-      method: 'POST',
-      uri: url_parg,
-      json: true,
-      gzip: true
-    })
+
+   let result = {}
+   try {
+      result = await axios({
+         method: 'get',
+         timeout: 40000,
+         url: 'https://www.cronista.com/MercadosOnline/json/getValoresCalculadora.html'
+      })
+   } catch (error) {
+      console.log(error)
+
+   } finally {
+      return result;
+   }
+
+
+
+
 }
 
 const getArsCurrencies = async function (json) {

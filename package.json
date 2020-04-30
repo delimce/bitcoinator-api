@@ -46,6 +46,8 @@
     "vision": "^5.4.4"
   },
   "devDependencies": {
-    "nodemon": "^1.18.11"
+    "axios": "^0.19.2",
+    "nodemon": "^1.18.11",
+    "minimist": ">=0.2.1"
   }
 }
