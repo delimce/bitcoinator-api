@@ -4,9 +4,7 @@ const Boom = require("boom");
 const Joi = require("joi");
 const _ = require("lodash");
 let locale = require("../../libs/i18nHelper");
-let email = require("../../libs/EmailHelper");
 let cmc = require("../../libs/CmcHelper");
-let petro = require("../../libs/PetroHelper");
 let dtoday = require("../../libs/DTodayHelper");
 let cronista = require("../../libs/CronistaHelper");
 let utils = require("../../libs/UtilsHelper");
@@ -235,7 +233,7 @@ const cryptoModule = {
               dolartoday.GOLD.rate
             );
 
-            let ars_max = (_.has(max_arg, 'Compra')) ? max_arg.Compra : 1;
+            let ars_max = (!_.isUndefined(max_arg)) ? max_arg.Compra : 1;
             let btcCoin = await _.find(coinMarketCap, function (o) { return o.symbol === "BTC" });
             let currency = [];
 
