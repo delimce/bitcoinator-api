@@ -55,7 +55,6 @@ const calcModule = {
                 handler: async (request, h) => {
                     try {
                         let argUsd = await cronista.getInfoArg()
-                        console.log(argUsd)
                         let argPricesList = _.map(await cronista.getArsCurrencies(argUsd), function (item) {
                             let temp = {};
                             temp.id = String(item.Id);
