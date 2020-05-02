@@ -20,7 +20,7 @@ exports.getInfoArg = async function () {
       console.log(error)
 
    } finally {
-      return result;
+      return result.data;
    }
 
 
