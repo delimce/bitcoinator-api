@@ -3,6 +3,7 @@
 let _ = require("lodash");
 const date = require("date-and-time");
 const axios = require('axios');
+const BASE_URL = "https://localbitcoins.com/";
 
 const getStatusLabel = function (minutes) {
   let status = "OFFLINE";
@@ -62,7 +63,7 @@ exports.getTradingPostsByCurrency = async function (op, currency, page) {
   let trade = op.toLowerCase() == "sell" ? "sell" : "buy";
 
   let url_localbtc =
-    "https://localbitcoins.com/" +
+    BASE_URL +
     trade +
     "-bitcoins-online/" +
     cur.toUpperCase() +
@@ -91,7 +92,7 @@ exports.getTradingPostsByLocation = async function (
   let trade = op.toLowerCase() == "sell" ? "sell" : "buy";
 
   let url_localbtc =
-    "https://localbitcoins.com/" +
+    BASE_URL +
     trade +
     "-bitcoins-online/" +
     local.toLowerCase() +
@@ -109,3 +110,14 @@ exports.getTradingPostsByLocation = async function (
   let resp = getRefactObject(info.data);
   return resp;
 };
+
+exports.getTraderProfile = async function (trader) {
+  let url_localbtc = BASE_URL + "api/account_info/" + trader + "/";
+  let info = await axios({
+    method: 'get',
+    timeout: 40000,
+    url: url_localbtc
+  });
+  return info.data;
+
+}

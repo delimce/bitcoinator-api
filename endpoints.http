@@ -14,8 +14,12 @@ GET {{baseUrl}}/cmc/coins/bitcoin HTTP/1.1
 GET {{baseUrl}}/calc/dolartoday HTTP/1.1
 ### dtoday detail api
 GET {{baseUrl}}/calc/dolartoday/euro HTTP/1.1
+### localbitcoins trader
+
+GET {{baseUrl}}/localbtc/traders/Top-BTC HTTP/1.1
+content-type: application/json
 ### localbitcoins api
-PUT {{baseUrl}}/localbtc/tradingPosts/currency/ves
+PUT {{baseUrl}}/localbtc/tradingPosts/currency/ves HTTP/1.1
 content-type: application/json
 
 {"type":"buy","location":"ve","page":2,"amount":1000000,"bank":""}

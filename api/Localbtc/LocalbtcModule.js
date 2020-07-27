@@ -79,7 +79,24 @@ const localbtcModule = {
                         return Boom.badImplementation('Failed to get....', err)
                     }
                 }
+            },
+            {
+                method: 'get',
+                path: conf.basePath + "/traders/{username}",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+                    try {
+                        let resp = await localbtc.getTraderProfile(request.params.username)
+                        return resp;
+                    } catch (err) {
+                        console.log(err)
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
+                }
             }
+
         ]
         )
     },
