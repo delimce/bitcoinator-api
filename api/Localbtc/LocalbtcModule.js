@@ -67,6 +67,30 @@ const localbtcModule = {
                 }
             },
             {
+                method: 'put',
+                path: conf.basePath + "/traderPosts/location/{code}",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+                    try {
+                        let data = request.payload;   // <-- this is the important line
+                        let country = _.find(conf.countries, function (o) { return o.cod == String(request.params.code) });
+                        let resp = await localbtc.getTradingPostsByLocation(data.type, request.params.code, country.name, 0)
+
+                        let final = _.filter(resp.results, function (post) {
+                            return post.profile.username.toLowerCase() == data.trader.toLowerCase()
+                        });
+
+                        return final
+
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
+
+                }
+            },
+            {
                 method: 'get',
                 path: conf.basePath + "/countries",
                 config: {
@@ -82,7 +106,7 @@ const localbtcModule = {
             },
             {
                 method: 'get',
-                path: conf.basePath + "/traders/{username}",
+                path: conf.basePath + "/trader/{username}",
                 config: {
                     auth: false
                 },

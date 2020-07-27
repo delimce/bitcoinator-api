@@ -16,13 +16,20 @@ GET {{baseUrl}}/calc/dolartoday HTTP/1.1
 GET {{baseUrl}}/calc/dolartoday/euro HTTP/1.1
 ### localbitcoins trader
 
-GET {{baseUrl}}/localbtc/traders/Top-BTC HTTP/1.1
+GET {{baseUrl}}/localbtc/trader/Top-BTC HTTP/1.1
 content-type: application/json
 ### localbitcoins api
 PUT {{baseUrl}}/localbtc/tradingPosts/currency/ves HTTP/1.1
 content-type: application/json
 
 {"type":"buy","location":"ve","page":2,"amount":1000000,"bank":""}
+
+### localbitcoins find by trader posts
+PUT {{baseUrl}}/localbtc/traderPosts/location/es HTTP/1.1
+content-type: application/json
+
+{"type":"buy","trader":"Top-BTC"}
+
 ### testing original localbitcoins endpoints
 GET https://localbitcoins.com/buy-bitcoins-online/es/spain/.json?page=1
 
