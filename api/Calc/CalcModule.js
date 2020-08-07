@@ -3,6 +3,7 @@ const conf = require("./config.json");
 const Boom = require('boom');
 const Joi = require('joi');
 const cronista = require("../../libs/CronistaHelper");
+const floatrates = require("../../libs/FloatratesHelper");
 const _ = require("lodash");
 
 const calcModule = {
@@ -27,6 +28,24 @@ const calcModule = {
                     }
 
                 }
+            },
+
+            {
+                method: 'get',
+                path: conf.basePath + "/floatrates",
+                config: {
+                    auth: false
+                },
+                handler: async (request, h) => {
+
+                    try {
+                        let info = await server.methods.floatrates()
+                        return info
+                    } catch (err) {
+                        return Boom.badImplementation('Failed to get....', err)
+                    }
+
+                } 
             },
 
             {

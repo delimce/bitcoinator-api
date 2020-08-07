@@ -12,6 +12,11 @@ GET {{baseUrl}}/cmc/coins HTTP/1.1
 GET {{baseUrl}}/cmc/coins/bitcoin HTTP/1.1
 ### dtoday api
 GET {{baseUrl}}/calc/dolartoday HTTP/1.1
+
+### floatrates api
+
+GET {{baseUrl}}/calc/floatrates HTTP/1.1
+
 ### dtoday detail api
 GET {{baseUrl}}/calc/dolartoday/euro HTTP/1.1
 ### localbitcoins trader

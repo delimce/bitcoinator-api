@@ -7,6 +7,7 @@ let locale = require("../../libs/i18nHelper");
 let cmc = require("../../libs/CmcHelper");
 let dtoday = require("../../libs/DTodayHelper");
 let cronista = require("../../libs/CronistaHelper");
+let floatrates = require("../../libs/FloatratesHelper");
 let utils = require("../../libs/UtilsHelper");
 
 const cryptoModule = {
@@ -81,6 +82,23 @@ const cryptoModule = {
         cache: "diskCache",
         expiresIn: 60 * 60 * 1000,
         segment: "fiat/arg",
+        generateTimeout: 3000
+      }
+    });
+
+    /**
+    * FLOATRATES FIAT values
+    */
+
+    const floa = function () {
+      return floatrates.getInfoFiats();
+    };
+
+    server.method("floatrates", floa, {
+      cache: {
+        cache: "diskCache",
+        expiresIn: 60 * 60 * 1000,
+        segment: "fiat/floa",
         generateTimeout: 3000
       }
     });
@@ -223,20 +241,21 @@ const cryptoModule = {
             let coins = request.payload; // <-- crypto coin list
 
             //async call
-            const [coinMarketCap, dolartoday, max_arg] = await Promise.all([
+            const [coinMarketCap, dolartoday, floatrates] = await Promise.all([
               cmc.findCoins(coins, await server.methods.assetsAll()),
               server.methods.dtodayAll(),
-              cronista.getArgByUpperPrice(await server.methods.ars())
+              server.methods.floatrates()
             ]);
 
             let price_gold_gram = await dtoday.goldPriceGram(
               dolartoday.GOLD.rate
             );
 
-            let ars_max = (!_.isUndefined(max_arg)) ? max_arg.Compra : 1;
             let btcCoin = await _.find(coinMarketCap, function (o) { return o.symbol === "BTC" });
             let currency = [];
-
+            let floa_euro = await _.find(floatrates, function(o) { return o.code==="EUR"; });
+            let floa_ars = await _.find(floatrates, function(o) { return o.code==="ARS"; });
+            
             //cmc data
             _.forEach(coinMarketCap, async function (coin) {
               let newCoin = {};
@@ -269,7 +288,7 @@ const cryptoModule = {
               symbol: "EUR",
               type: "fiat",
               price_bs: Number(dolartoday.EUR.dolartoday),
-              price_usd: Number(dolartoday.EURUSD.rate)
+              price_usd:floa_euro.inverseRate
             };
 
             currency.push(euro);
@@ -278,8 +297,8 @@ const cryptoModule = {
               id: "arg",
               symbol: "ARS",
               type: "fiat",
-              price_bs: Number((1 / ars_max) * dolartoday.USD.dolartoday),
-              price_usd: Number(1 / ars_max)
+              price_bs: Number(floa_ars.inverseRate * dolartoday.USD.dolartoday),
+              price_usd: floa_ars.inverseRate
             };
 
             currency.push(arg);
