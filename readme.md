@@ -1,6 +1,11 @@
 [![An old rock in the desert](https://www.delimce.com/images/github_dev_logo.png "go to develemento")](http://delimce.com)
 # Bitcoinator api
 Restful API for Crypto & Fiat requests information to feed websites and mobile aplications, (builded with Venezuela's situation in mind :D) 
+
+# DEPRECATED: this project is now deprecated, the new api that we continue updating will be -> Rekorbapi
+You could find more information in this repo:
+https://github.com/delimce/rekorbapi
+
 ## Getting started
 ```bash
 git clone https://github.com/delimce/bitcoinator-api
